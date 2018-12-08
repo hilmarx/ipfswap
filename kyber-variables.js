@@ -11,6 +11,7 @@ kyberNetworkContract = new web3.eth.Contract(kyberNetworkAbi, kyberNetworkAddres
 
 // -------------------------------------------------------
 // For get expected rate function
+
 // source ERC20 token contract address
 const src = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'; // ETH
 // const src = '0x55080ac40700BdE5725D8a87f48a01e192F660AF'; // Kyber
@@ -21,16 +22,18 @@ const srcQty = web3.utils.toWei('1');
 // For Trade function
 
 // limit on the amount of destination tokens (to avoid too large orders)
-const maxDestAmount = new web3.utils.BN(Math.pow(2, 255).toString);
+
+const destAddress = '0x24A23af4c7A1449A1669d7F1bFdb116480b8e691';
+
 
 // minimum conversion rate; trade is canceled if actual rate is lower
-const minConversionRate = new web3.utils.BN('55555');
+const minConversionRate = 50335827358;
 
 // Fees will go to this handsome young gentleman:
 const walletId = '0x24A23af4c7A1449A1669d7F1bFdb116480b8e691';
 
 //wei amount of source ERC20 token
-const srcAmount = new web3.utils.BN('3000000000000000000000');
+const srcAmount =  web3.utils.toWei('100');
 
 // Token Addrress of token the User wants to purchase.
 // const dest = '0xdd974D5C2e2928deA5F71b9825b8b646686BD200'; // KNC

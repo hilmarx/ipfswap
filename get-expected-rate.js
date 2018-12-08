@@ -2,10 +2,11 @@ console.log(src);
 console.log(dest);
 console.log(srcQty);
 
+
 async function getExpectedRate() {
 
-  let expectedRate;
-  let slippageRate;
+let expectedRate;
+let slippageRate;
 
   ({ expectedRate, slippageRate } = await kyberNetworkContract.methods.getExpectedRate(
   src, // srcToken
@@ -13,14 +14,16 @@ async function getExpectedRate() {
   web3.utils.toWei('1') // srcQty
   ).call());
   console.log(expectedRate);
+  storeExpectedRate = expectedRate;
   console.log(slippageRate);
+  storeSlippageRate = slippageRate;
 
 }
 
 // EXPECTED RATE END
 
 window.addEventListener('load', function() {
-  getExpectedRate()
+  getExpectedRate();
 })
 
 
