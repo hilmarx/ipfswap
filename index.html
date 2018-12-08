@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>IPFSWAP</title>
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Include web3.js here -->
+    <script language="javascript" type="text/javascript" src="kybernetwork_abi.js"></script><!--
+    <script language="javascript" type="text/javascript" src="https://unpkg.com/bn.js@4.11.8/lib/bn.js">>
+    </script> -->
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
+
+
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="container-text-center">
+
+        <h1>IPFSWAP</h1>
+        <form action="">
+          <label for="">Sell</label><br>
+          <ul id="sell-form">
+            <input id="src-token" type="number" name="sell-amount" placeholder="amount"><br>
+          </ul>
+          <label for="">Buy</label><br>
+          <ul id="buy-form">
+          <input id="dest-token" type="text" name="buy-amount" placeholder="amount"><br>
+          </ul>
+          <input id="swap-button" type="submit" value="SWAP">
+        </form>
+        <!-- Smart Contract Methods -->
+      </div>
+    </div>
+
+    <script language="javascript" type="text/javascript" src="kyber-variables.js"></script>
+
+    <!-- Show available currencies -->
+    <script language="javascript" type="text/javascript" src="currencies.js"></script>
+
+    <script language="javascript" type="text/javascript" src="get-expected-rate.js"></script>
+
+    <script language="javascript" type="text/javascript" src="trade.js"></script>
+
+  </body>
+</html>
