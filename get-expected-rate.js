@@ -1,22 +1,24 @@
-console.log(src);
-console.log(dest);
-console.log(srcQty);
+let expectedRate;
+let slippageRate;
+let expectedRateDone;
 
 
 async function getExpectedRate() {
-
-let expectedRate;
-let slippageRate;
 
   ({ expectedRate, slippageRate } = await kyberNetworkContract.methods.getExpectedRate(
   src, // srcToken
   dest, // destToken
   web3.utils.toWei('1') // srcQty
   ).call());
-  console.log(expectedRate);
   storeExpectedRate = expectedRate;
-  console.log(slippageRate);
   storeSlippageRate = slippageRate;
+  console.log("----- Get Expected Rate -----");
+  console.log(`Expected Rate: ${expectedRate}`);
+  console.log(`Slippage Rate: ${slippageRate}`);
+  console.log("----- Get Expected Rate End -----");
+  expectedRateDone = true;
+  tradeInit();
+
 
 }
 

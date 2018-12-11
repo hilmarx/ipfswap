@@ -8,10 +8,8 @@ function fetchCurrencies() {
   fetch(url)
     .then(response => response.json())
     .then((data) => {
-      console.log(data);
       data.data.forEach((currency) => {
         // Input Currencies to buy
-        console.log(currency);
         let buyItem = `<input type="radio" name="buyItem" id="buy-${currency.symbol}" value="${currency.symbol}">${currency.name} - ${currency.symbol}<br>`;
         buyForm.insertAdjacentHTML("beforeend", buyItem);
 

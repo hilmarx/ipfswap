@@ -1,11 +1,17 @@
 // Conduct the SWAP / TRADE
 
 
+// window.addEventListener('submit', async function(event) {
+  //   event.stopPropagation();
+  // event.preventDefault();
 
-window.addEventListener('submit',async function(event) {
 
-  event.stopPropagation();
-  event.preventDefault();
+async function trade() {
+
+  // Prevent Front running by kimiting the amount of gas a user can specify:
+
+  let maxGasPrice = await KyberNetworkProxyContract.methods.maxGasPrice().call()
+  console.log(`Max gas price: ${maxGasPrice}`);
 
 
   // Variables
@@ -101,7 +107,29 @@ const kyberNetworkProxyABI = [{"constant":false,"inputs":[{"name":"alerter","typ
     data: transactionData
   });
 
-});
+
+}
+
+trade();
+
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //   transactionData = kyberNetworkContract.trade(src, srcAmount, dest, destAddress, maxDestAmount, minConversionRate, walletId, function (err, res) {
 
 //     if (!err) {
@@ -139,5 +167,7 @@ const kyberNetworkProxyABI = [{"constant":false,"inputs":[{"name":"alerter","typ
 //         console.log("error")
 //         console.log(err);
 //       }})
+
+
 // })
 
