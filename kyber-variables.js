@@ -38,6 +38,7 @@ const srcQty = web3.utils.toWei('1');
 const destAddress = '0x24A23af4c7A1449A1669d7F1bFdb116480b8e691';
 
 const maxDestAmount = 100000000000;
+
 // minimum conversion rate; trade is canceled if actual rate is lower
 const minConversionRate = 50335827358;
 
