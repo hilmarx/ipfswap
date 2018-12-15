@@ -1,22 +1,32 @@
 // Set Variables
 // Example: Kyber Network:
 
-function tradeInit() {
+async function tradeInit() {
   const ERC20ABI = KNCABI;
+  // Address of Ether
+  const ETH_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
   // Source token address: Kyber Network Token
-  const SRC_TOKEN_ADDRESS = "0x55080ac40700BdE5725D8a87f48a01e192F660AF";
+  const SRC_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+  // 0x55080ac40700BdE5725D8a87f48a01e192F660AF
   // Desination token address: Omise Go
   const DEST_TOKEN_ADDRESS = "0x659c4206b2ee8CC00af837CddA132eb30fA58df8";
   // Vendor address
-  const VENDOR_WALLET_ADDRESS = "0xAC5781f6eEC1f0Cb9B353aCBB745f813cEf68311"
+  const VENDOR_WALLET_ADDRESS = "0xAC5781f6eEC1f0Cb9B353aCBB745f813cEf68311";
+
   const KYBER_NETWORK_PROXY_ADDRESS = kyberNetworkAddress;
-  // !!!!!!!!!!!!!!!!!!!!!Does not fetch expectedRate!!!!!!!!!!!!!!!!
-  const srcTokenWeiPrice = expectedRate;
-  // !!!!!!!!!!!!!!!!!!!!!Does not fetch userAddress with userAddress!!!!!!!!!!!!!!!!
-  const USER_ACCOUNT = web3.eth.accounts.givenProvider.selectedAddress;
+
+  const srcTokenWeiPrice = await expectedRate;
+
+  const USER_ACCOUNT = await web3.eth.accounts.givenProvider.selectedAddress;
+
   const srcTokenWeiAmount = srcAmount;
+
+  const ethTokenWeiAmount = srcAmount;
+
   const KyberNetworkProxyContract = kyberNetworkContract;
+
   const maximumDestTokenWeiAmount = maxDestAmount;
+
   const minConversionWeiRate = slippageRate;
 
 
@@ -45,24 +55,46 @@ function tradeInit() {
     // STEP 2:  END
 
     // Step 3: Execute Trade
+    // not sure about VENDOR WALLET ADDRESS
     async function executeTrade() {
-      console.log("Enter executeTrade function");
-      transactionData = KyberNetworkProxyContract.methods.trade(
-          SRC_TOKEN_ADDRESS, //ERC20 srcToken
-          srcTokenWeiAmount, //uint srcAmount
-          DEST_TOKEN_ADDRESS, //ERC20 destToken
-          VENDOR_WALLET_ADDRESS, //address destAddress
-          maximumDestTokenWeiAmount, //uint maxDestAmount
-          minConversionWeiRate, //uint minConversionRate
-          VENDOR_WALLET_ADDRESS //uint walletId
-          ).encodeABI();
+      if (SRC_TOKEN_ADDRESS == ETH_TOKEN_ADDRESS) {
 
-      txReceipt = await web3.eth.sendTransaction({
-          from: USER_ACCOUNT, //obtained from website interface Eg. Metamask, Ledger etc.
-          to: KYBER_NETWORK_PROXY_ADDRESS,
-          data: transactionData
-      })
-      console.log("Exit execute Trade function");
+        transactionData = KyberNetworkProxyContract.methods.trade(
+        ETH_TOKEN_ADDRESS, //ERC20 srcToken
+        ethTokenWeiAmount, //uint srcAmount
+        DEST_TOKEN_ADDRESS, //ERC20 destToken
+        VENDOR_WALLET_ADDRESS, //address destAddress
+        maximumDestTokenWeiAmount, //uint maxDestAmount
+        minConversionWeiRate, //uint minConversionRate
+        VENDOR_WALLET_ADDRESS //uint walletId
+        ).encodeABI()
+
+        txReceipt = await web3.eth.sendTransaction({
+            from: USER_ACCOUNT, //obtained from website interface Eg. Metamask, Ledger etc.
+            to: KYBER_NETWORK_PROXY_ADDRESS,
+            data: transactionData,
+            value: ethTokenWeiAmount, //ADDITIONAL FIELD HERE
+        })
+      } else {
+          console.log("Enter executeTrade function Else Statement");
+          transactionData = KyberNetworkProxyContract.methods.trade(
+              SRC_TOKEN_ADDRESS, //ERC20 srcToken
+              srcTokenWeiAmount, //uint srcAmount
+              DEST_TOKEN_ADDRESS, //ERC20 destToken
+              VENDOR_WALLET_ADDRESS, //address destAddress
+              maximumDestTokenWeiAmount, //uint maxDestAmount
+              minConversionWeiRate, //uint minConversionRate
+              VENDOR_WALLET_ADDRESS //uint walletId
+              ).encodeABI();
+
+          console.log("Send Transaction method")
+          txReceipt = await web3.eth.sendTransaction({
+              from: USER_ACCOUNT, //obtained from website interface Eg. Metamask, Ledger etc.
+              to: KYBER_NETWORK_PROXY_ADDRESS,
+              data: transactionData
+          })
+          console.log("Exit execute Trade function");
+      }
     }
 
 
