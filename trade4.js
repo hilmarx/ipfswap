@@ -3,10 +3,20 @@
 var web3 = new Web3(Web3.givenProvider);
 
 // Pre-defined variables
-
 // web3 provider should already be set
 // const web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io"))
 var utils = web3.utils
+
+// Fetch User Address
+async function fetchAddress() {
+  await web3.eth.getAccounts(function(error, result) {
+    fetchedUserAddressArray = result;
+    fetchedUserAddress = fetchedUserAddressArray[0];
+    return fetchedUserAddress;
+  });
+};
+
+const USER_ACCOUNT_2 = fetchAddress();
 
 const USER_ACCOUNT = "0xac5781f6eec1f0cb9b353acbb745f813cef68311";
 // const USER_ACCOUNT = "0xAC5781f6eEC1f0Cb9B353aCBB745f813cEf68311";
@@ -66,7 +76,7 @@ async function main() {
     console.log("Product price: " + userTokenPrice + " KNC")
 
     // Conver userTOkenWeiPrice to String
-    userTokenWeiPrice2 = "11067160398840000000";
+    userTokenWeiPrice2 = "1006716039884000000";
     /*
     ########################
     ### TRADE EXECUTION ####
@@ -82,7 +92,7 @@ async function main() {
     console.log("transcationData CHECK");
 
     txReceipt = await web3.eth.sendTransaction({
-        from: USER_ACCOUNT, //obtained from website interface Eg. Metamask, Ledger etc.
+        from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
         to: "0x4e470dc7321e84ca96fcaedd0c8abcebbaeb68c6", //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
         data: transactionData
         }).catch(error => console.log(error))
@@ -105,7 +115,7 @@ async function main() {
       "0x4e470dc7321e84ca96fcaedd0c8abcebbaeb68c6", //ERC20 srcToken
       userTokenWeiPrice2, //uint srcAmount
       ETH_TOKEN_ADDRESS, //ERC20 destToken
-      USER_ACCOUNT, //address destAddress => VENDOR_WALLET_ADDRESS
+      fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
       userTokenWeiPrice2, //uint maxDestAmount
       "1", //uint minConversionRate
       "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
@@ -114,7 +124,7 @@ async function main() {
     console.log("transactionData2 CHECK");
 
     txReceipt = await web3.eth.sendTransaction({
-        from: USER_ACCOUNT, //obtained from website interface Eg. Metamask, Ledger etc.
+        from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
         to: KYBER_NETWORK_PROXY_ADDRESS,
         data: transactionData,
         }).catch(error => console.log(error))
