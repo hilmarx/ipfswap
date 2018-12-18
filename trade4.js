@@ -158,5 +158,5 @@ async function getKyberNetworkProxyAddress() {
 }
 
 // getKyberNetworkProxyAddress();
-main();
+// main();
 

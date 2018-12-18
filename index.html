@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>IPFSWAP</title>
+    <link rel="stylesheet" href="styles.css">
     <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- Include web3.js here -->
     <script language="javascript" type="text/javascript" src="kybernetwork_abi.js"></script>
@@ -27,6 +28,28 @@
       <div class="container-text-center">
 
         <h1>IPFSWAP</h1>
+
+      <div class="dropdown" id="sell-dropdown">
+        <button onclick="SellFunction()" class="dropbtn">Select Currency to sell</button>
+        <div id="sellDropdown" class="dropdown-content">
+          <a href="#">ETH</a>
+          <a href="#">BTC</a>
+          <a href="#">EOS</a>
+        </div>
+      </div>
+
+      <div class="dropdown" id="buy-dropdown">
+        <button onclick="BuyFunction()" class="dropbtn">Select Currency to sell</button>
+        <div id="buyDropdown" class="dropdown-content">
+          <a href="#">ETH</a>
+          <a href="#">BTC</a>
+          <a href="#">EOS</a>
+        </div>
+      </div>
+
+        <br>
+        <br>
+
         <form action="">
           <label for="">Sell</label><br>
           <ul id="sell-form">
@@ -38,18 +61,19 @@
           </ul>
           <input id="swap-button" type="submit" value="SWAP">
         </form>
-        <!-- Smart Contract Methods -->
       </div>
     </div>
 
 <!--     <script language="javascript" type="text/javascript" src="kyber-variables.js"></script> -->
 
-    <!-- Show available currencies -->
-<!--     <script language="javascript" type="text/javascript" src="currencies.js"></script>
- -->
+<!-- Trade function -->
+    <script language="javascript" type="text/javascript" src="trade4.js"></script>
+
+
+<!--     Show available currencies-->
+   <script language="javascript" type="text/javascript" src="currencies.js"></script>
 <!--     <script language="javascript" type="text/javascript" src="get-expected-rate.js"></script> -->
 
-    <script language="javascript" type="text/javascript" src="trade4.js"></script>
 
   </body>
 </html>
