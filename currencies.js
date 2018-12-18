@@ -30,54 +30,47 @@ function fetchCurrencies() {
 
 var currencyList = fetchCurrencies();
 
-// Set variables based on User Selection
 
+// Fetch the selected Tokens addresses
 
-// 1. Select all ahrefs
+let addressToSell;
+let addressToBuy;
 
-// 2. Add an event listener that returns the src and dest addresses of the selected tokens
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
 
+function SellFunction() {
+  document.getElementById("sellDropdown").classList.toggle("show");
+}
 
-// currenciesToSell.addEventListener('onclick', returnTokenAddress())
+function BuyFunction() {
+  document.getElementById("buyDropdown").classList.toggle("show");
+}
 
-// 3. Call the get-expected-rate function with these variables and display the results
-
-
-// Show Dropdown when user clicks on button
-
-  let addressToSell;
-  let addressToBuy;
-
-  /* When the user clicks on the button,
-  toggle between hiding and showing the dropdown content */
-
-  function SellFunction() {
-    document.getElementById("sellDropdown").classList.toggle("show");
-  }
-
-  function BuyFunction() {
-    document.getElementById("buyDropdown").classList.toggle("show");
-  }
-
-  // Close the dropdown menu if the user clicks outside of it
-  window.onclick = function(event) {
-    if (!event.target.matches('.dropbtn')) {
-      var dropdowns = document.getElementsByClassName("dropdown-content");
-      var i;
-      for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-          openDropdown.classList.remove('show');
-          if (openDropdown.value == "sellDropdown") {
-            console.log(event.target.attributes[3].value);
-            addressToSell = event.target.attributes[3].value
-          } else {
-            console.log(event.target.attributes[3].value);
-            addressToBuy = event.target.attributes[3].value
-          }
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+        // If the sell Dropdown is selected
+        if (openDropdown.id == "sellDropdown") {
+          console.log(event.target.attributes[3].value);
+          addressToSell = `${event.target.attributes[3].value}`;
+          return addressToSell;
+          // If the buy Dropdown is selected
+        } else if (openDropdown.id == "buyDropdown") {
+          console.log(event.target.attributes[3].value);
+          addressToBuy = `${event.target.attributes[3].value}`;
+          return addressToBuy;
+        } else {
+          console.log("not working")
         }
       }
     }
   }
-
+}
 
