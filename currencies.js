@@ -64,11 +64,12 @@ window.onclick = function(event) {
           // srcAmountHTML.value = 0;
           // destAmountHTML.value = 0;
 
-          // Refresh Expected rate
-          displayExchangeRate();
 
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()
+
+          // Refresh Expected rate
+          // displayExchangeRate();
 
           // Set Dropdown value to Token acronym
           document.getElementById("sell-button").innerText = event.target.attributes.id.value;
@@ -82,11 +83,13 @@ window.onclick = function(event) {
           // srcAmountHTML.value = 0;
           // destAmountHTML.value = 0;
 
-          // Refresh Expected rate
-          displayExchangeRate();
 
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()
+
+          // Refresh Expected rate
+          // displayExchangeRate();
+
           // Set Dropdown value to Token acronym
           document.getElementById("buy-button").innerText = event.target.attributes.id.value;
           return addressToBuy;

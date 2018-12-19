@@ -24,7 +24,8 @@ const expectedRateHTML = document.querySelector(".exchange-rate");
 
 function displayExchangeRate() {
   // Calcualte user Exchange rate
-  expectedRateHTML.innerHTML = `<h3>${expectedRate}</h3>`;
+  expectedRateHTML.innerText = expectedRate / (10 ** 18);
+  // expectedRate / (10 ** 18)
 }
 
 // Create HTML to display display expected destination amount
@@ -65,6 +66,7 @@ async function getExpectedRate() {
   slippageRate = result.slippageRate
   console.log("Expected Rate: " + expectedRate)
   console.log("Slippage Rate: " + slippageRate)
+  displayExchangeRate();
 }
 
 getExpectedRate();
