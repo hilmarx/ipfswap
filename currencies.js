@@ -61,8 +61,11 @@ window.onclick = function(event) {
           addressToSell = `${event.target.attributes[3].value}`;
 
           // Refresh amounts
-          srcAmountHTML.value = 0;
-          destAmountHTML.value = 0;
+          // srcAmountHTML.value = 0;
+          // destAmountHTML.value = 0;
+
+          // Refresh Expected rate
+          displayExchangeRate();
 
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()
@@ -76,8 +79,11 @@ window.onclick = function(event) {
           addressToBuy = `${event.target.attributes[3].value}`;
 
           // Refresh amounts
-          srcAmountHTML.value = 0;
-          destAmountHTML.value = 0;
+          // srcAmountHTML.value = 0;
+          // destAmountHTML.value = 0;
+
+          // Refresh Expected rate
+          displayExchangeRate();
 
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()

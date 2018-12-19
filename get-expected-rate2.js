@@ -18,7 +18,14 @@ let slippageRate;
 // destAmount HTML field
 const destAmountHTML = document.getElementById("dest-amount");
 const srcAmountHTML = document.getElementById("src-amount");
+const expectedRateHTML = document.querySelector(".exchange-rate");
 
+// Display Exchange Rate
+
+function displayExchangeRate() {
+  // Calcualte user Exchange rate
+  expectedRateHTML.innerHTML = `<h3>${expectedRate}</h3>`;
+}
 
 // Create HTML to display display expected destination amount
 
@@ -33,13 +40,14 @@ function displaySrcAmount() {
 //  Take Expected Rate and display how many destTokens the user will get in return
 function sellExchangeRate() {
   srcAmount = event.srcElement.value;
-  destAmount = (srcAmount * expectedRate) / 10 ** 18;
+  destAmount = (srcAmount * (expectedRate / 10 ** 18));
   displayDestAmount();
 }
 
 function buyExchangeRate() {
   destAmount = event.srcElement.value;
-  srcAmount = (destAmount *  1 / expectedRate) / 10 ** 18;
+  srcAmount = destAmount * (1 / (expectedRate / (10 ** 18)));
+  console.log(`expected rate ${expectedRate} destAmount ${destAmount} - srcAmount ${srcAmount}`)
   displaySrcAmount();
 }
 
