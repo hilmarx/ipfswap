@@ -1,13 +1,13 @@
 // Variables needed
 
-var kyberNetworkProxyContract = null
+var kyberNetworkProxyContract = null;
 
-const kyberNetworkProxyAddress = "0x818e6fecd516ecc3849daf6845e3ec868087b755"
+var kyberNetworkProxyAddress = "0x818e6fecd516ecc3849daf6845e3ec868087b755";
 
-kyberNetworkProxyContract = new web3.eth.Contract(kyberNetworkProxyAbi, KYBER_NETWORK_PROXY_ADDRESS)
+kyberNetworkProxyContract = new web3.eth.Contract(kyberNetworkProxyABI, kyberNetworkProxyAddress)
 
-const src = addressToSell;
-const dest = addressToBuy;
+let src = addressToSell;
+let dest = addressToBuy;
 
 let srcAmount
 let destAmount;
