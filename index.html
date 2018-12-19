@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="styles.css">
     <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- Include web3.js here -->
-    <script language="javascript" type="text/javascript" src="kybernetwork_abi.js"></script>
+    <script language="javascript" type="text/javascript" src="kyber-network-proxi-abi.js"></script>
     <script language="javascript" type="text/javascript" src="erc20abi-example.js"></script>
     <!--
     <script language="javascript" type="text/javascript" src="https://unpkg.com/bn.js@4.11.8/lib/bn.js">>
@@ -30,13 +30,15 @@
         <h1>IPFSWAP</h1>
 
       <div class="dropdown" id="sell-dropdown">
-        <button onclick="SellFunction()" class="dropbtn" id="sell-button">Select Currency to sell</button>
+        <h3>Sell</h3>
+        <button onclick="SellFunction()" class="dropbtn" id="sell-button">ETH</button>
         <div id="sellDropdown" class="dropdown-content">
         </div>
       </div>
 
       <div class="dropdown" id="buy-dropdown">
-        <button onclick="BuyFunction()" class="dropbtn" id="buy-button">Select Currency to buy</button>
+        <h3>Buy</h3>
+        <button onclick="BuyFunction()" class="dropbtn" id="buy-button">KNC</button>
         <div id="buyDropdown" class="dropdown-content">
         </div>
       </div>
@@ -47,11 +49,11 @@
         <form action="">
           <label for="">Sell</label><br>
           <ul id="sell-form">
-            <input id="src-token" type="number" name="sell-amount" placeholder="amount"><br>
+            <input id="src-amount" type="number" name="sell-amount" placeholder="amount" onkeyup="calcExchangeRate()"><br>
           </ul>
           <label for="">Buy</label><br>
           <ul id="buy-form">
-          <input id="dest-token" type="text" name="buy-amount" placeholder="amount"><br>
+          <input id="dest-amount" type="text" name="buy-amount" placeholder="amount"><br>
           </ul>
           <input id="swap-button" type="submit" value="SWAP">
         </form>
@@ -66,7 +68,7 @@
 
 <!--     Show available currencies-->
    <script language="javascript" type="text/javascript" src="currencies.js"></script>
-<!--     <script language="javascript" type="text/javascript" src="get-expected-rate.js"></script> -->
+    <script language="javascript" type="text/javascript" src="get-expected-rate2.js"></script>
 
 
   </body>

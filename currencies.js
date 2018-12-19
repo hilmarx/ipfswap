@@ -31,8 +31,8 @@ var currencyList = fetchCurrencies();
 
 // Fetch the selected Tokens addresses
 
-let addressToSell;
-let addressToBuy;
+let addressToSell = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+let addressToBuy = "0x4e470dc7321e84ca96fcaedd0c8abcebbaeb68c6";
 
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
@@ -59,6 +59,8 @@ window.onclick = function(event) {
         if (openDropdown.id == "sellDropdown") {
           console.log(event.target.attributes[3].value);
           addressToSell = `${event.target.attributes[3].value}`;
+          // Re-run getExpectedRate function for new address pair
+          getExpectedRate()
           // Set Dropdown value to Token acronym
           document.getElementById("sell-button").innerText = event.target.attributes.id.value;
           return addressToSell;
@@ -66,6 +68,9 @@ window.onclick = function(event) {
         } else if (openDropdown.id == "buyDropdown") {
           console.log(event.target.attributes[3].value);
           addressToBuy = `${event.target.attributes[3].value}`;
+
+          // Re-run getExpectedRate function for new address pair
+          getExpectedRate()
           // Set Dropdown value to Token acronym
           document.getElementById("buy-button").innerText = event.target.attributes.id.value;
           return addressToBuy;
