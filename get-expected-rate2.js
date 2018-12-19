@@ -17,6 +17,7 @@ let slippageRate;
 
 // destAmount HTML field
 const destAmountHTML = document.getElementById("dest-amount");
+const srcAmountHTML = document.getElementById("src-amount");
 
 
 // Create HTML to display display expected destination amount
@@ -25,11 +26,21 @@ function displayDestAmount() {
   destAmountHTML.value = destAmount;
 }
 
+function displaySrcAmount() {
+  srcAmountHTML.value = srcAmount;
+}
+
 //  Take Expected Rate and display how many destTokens the user will get in return
-function calcExchangeRate() {
+function sellExchangeRate() {
   srcAmount = event.srcElement.value;
   destAmount = (srcAmount * expectedRate) / 10 ** 18;
   displayDestAmount();
+}
+
+function buyExchangeRate() {
+  destAmount = event.srcElement.value;
+  srcAmount = (destAmount *  1 / expectedRate) / 10 ** 18;
+  displaySrcAmount();
 }
 
 // Test whether users receive different expected Rates for different quantities

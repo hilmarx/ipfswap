@@ -49,11 +49,11 @@
         <form action="">
           <label for="">Sell</label><br>
           <ul id="sell-form">
-            <input id="src-amount" type="number" name="sell-amount" placeholder="amount" onkeyup="calcExchangeRate()"><br>
+            <input id="src-amount" type="number" name="sell-amount" placeholder="amount" onkeyup="sellExchangeRate()"><br>
           </ul>
           <label for="">Buy</label><br>
           <ul id="buy-form">
-          <input id="dest-amount" type="text" name="buy-amount" placeholder="amount"><br>
+          <input id="dest-amount" type="text" name="buy-amount" placeholder="amount" onkeyup="buyExchangeRate()"><br>
           </ul>
           <input id="swap-button" type="submit" value="SWAP">
         </form>

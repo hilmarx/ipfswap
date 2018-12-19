@@ -59,8 +59,14 @@ window.onclick = function(event) {
         if (openDropdown.id == "sellDropdown") {
           console.log(event.target.attributes[3].value);
           addressToSell = `${event.target.attributes[3].value}`;
+
+          // Refresh amounts
+          srcAmountHTML.value = 0;
+          destAmountHTML.value = 0;
+
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()
+
           // Set Dropdown value to Token acronym
           document.getElementById("sell-button").innerText = event.target.attributes.id.value;
           return addressToSell;
@@ -68,6 +74,10 @@ window.onclick = function(event) {
         } else if (openDropdown.id == "buyDropdown") {
           console.log(event.target.attributes[3].value);
           addressToBuy = `${event.target.attributes[3].value}`;
+
+          // Refresh amounts
+          srcAmountHTML.value = 0;
+          destAmountHTML.value = 0;
 
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()
