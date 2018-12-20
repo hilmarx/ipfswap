@@ -64,8 +64,6 @@ async function getExpectedRate() {
 
   expectedRate = result.expectedRate
   slippageRate = result.slippageRate
-  console.log("Expected Rate: " + expectedRate)
-  console.log("Slippage Rate: " + slippageRate)
   displayExchangeRate();
 }
 
