@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>IPFSWAP</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="stylesheets/styles.css">
 
     <!--Jquery and Popper.js -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -14,8 +14,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
     <!-- Include web3.js here -->
-    <script language="javascript" type="text/javascript" src="kyber-network-proxi-abi.js"></script>
-    <script language="javascript" type="text/javascript" src="erc20-abi.js"></script>
+    <script language="javascript" type="text/javascript" src="javascript/kyber-network-proxi-abi.js"></script>
+    <script language="javascript" type="text/javascript" src="javascript/erc20-abi.js"></script>
     <!--
     <script language="javascript" type="text/javascript" src="https://unpkg.com/bn.js@4.11.8/lib/bn.js">>
     </script> -->
@@ -39,47 +39,55 @@
     <div class="wrapper">
       <div class="container">
 
-      <div class="dropdown" id="sell-dropdown">
-        <h3>Sell</h3>
-        <button onclick="SellFunction()" class="dropbtn" id="sell-button">ETH</button>
-        <div id="sellDropdown" class="dropdown-content">
+        <div class="row align-items-center">
+          <div class="col"></div>
+          <div class="col">
+            <div class="dropdown" id="sell-dropdown">
+              <h3>Sell</h3>
+              <button onclick="SellFunction()" class="dropbtn" id="sell-button">ETH</button>
+              <div id="sellDropdown" class="dropdown-content">
+              </div>
+            </div>
+
+            <div class="dropdown" id="buy-dropdown">
+              <h3>Buy</h3>
+              <button onclick="BuyFunction()" class="dropbtn" id="buy-button">KNC</button>
+              <div id="buyDropdown" class="dropdown-content">
+              </div>
+            </div>
+
+            <br>
+            <br>
+
+            <form action="" id="trade-form">
+                <label for="">Sell</label><br>
+                <ul id="sell-form">
+                  <input id="src-amount" type="number" name="sell-amount" placeholder="amount" onkeyup="sellExchangeRate()"><br>
+                </ul>
+                <label for="">Buy</label><br>
+                <ul id="buy-form">
+                <input id="dest-amount" type="text" name="buy-amount" placeholder="amount" onkeyup="buyExchangeRate()"><br>
+                </ul>
+                <h3>Expected Exchange Rate:</h3>
+                <div class="exchange-rate"></div>
+                <input id="swap-button" type="submit" value="SWAP">
+            </form>
+          </div>
+
+          <div class="col"></div>
         </div>
-      </div>
 
-      <div class="dropdown" id="buy-dropdown">
-        <h3>Buy</h3>
-        <button onclick="BuyFunction()" class="dropbtn" id="buy-button">KNC</button>
-        <div id="buyDropdown" class="dropdown-content">
-        </div>
-      </div>
-
-        <br>
-        <br>
-
-        <form action="" id="trade-form">
-          <label for="">Sell</label><br>
-          <ul id="sell-form">
-            <input id="src-amount" type="number" name="sell-amount" placeholder="amount" onkeyup="sellExchangeRate()"><br>
-          </ul>
-          <label for="">Buy</label><br>
-          <ul id="buy-form">
-          <input id="dest-amount" type="text" name="buy-amount" placeholder="amount" onkeyup="buyExchangeRate()"><br>
-          </ul>
-          <h3>Expected Exchange Rate:</h3>
-          <div class="exchange-rate"></div>
-          <input id="swap-button" type="submit" value="SWAP">
-        </form>
       </div>
     </div>
 
     <!-- Trade function -->
-    <script language="javascript" type="text/javascript" src="trade5.js"></script>
+    <script language="javascript" type="text/javascript" src="javascript/trade5.js"></script>
 
     <!-- Show available currencies-->
-    <script language="javascript" type="text/javascript" src="currencies.js"></script>
+    <script language="javascript" type="text/javascript" src="javascript/currencies.js"></script>
 
     <!-- Get Expected Rates -->
-    <script language="javascript" type="text/javascript" src="get-expected-rate2.js"></script>
+    <script language="javascript" type="text/javascript" src="javascript/get-expected-rate2.js"></script>
 
   </body>
 
