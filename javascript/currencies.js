@@ -14,12 +14,12 @@ function fetchCurrencies() {
       data.data.forEach((currency) => {
         // Input Currencies to buy
                   //<a href="#">EOS</a>
-        let buyItem =  `<a href="#"name="buyItem" id="${currency.symbol}" value="${currency.address}">${currency.symbol}</a>`
+        let buyItem =  `<a href="#"name="${currency.name}" id="${currency.symbol}" value="${currency.address}">${currency.name} - (${currency.symbol})</a>`
         // let buyItem = `<input type="radio" name="buyItem" id="buy-${currency.symbol}" value="${currency.symbol}">${currency.name} - ${currency.symbol}<br>`;
         buyForm.insertAdjacentHTML("beforeend", buyItem);
 
         // Input Currencies to sell
-        let sellItem =  `<a href="#" name="sellItem" id="${currency.symbol}" value="${currency.address}">${currency.symbol}</a>`
+        let sellItem =  `<a href="#" name="${currency.name}" id="${currency.symbol}" value="${currency.address}">${currency.name} - (${currency.symbol})</a>`
         // let sellItem = `<input type="radio" name="sellItem" id="sell-${currency.symbol}" value="${currency.symbol}">${currency.name} - ${currency.symbol}<br>`;
         sellForm.insertAdjacentHTML("beforeend", sellItem);
       });
@@ -64,7 +64,6 @@ window.onclick = function(event) {
           // srcAmountHTML.value = 0;
           // destAmountHTML.value = 0;
 
-
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()
 
@@ -72,7 +71,7 @@ window.onclick = function(event) {
           // displayExchangeRate();
 
           // Set Dropdown value to Token acronym
-          document.getElementById("sell-button").innerText = event.target.attributes.id.value;
+          document.getElementById("sell-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
           return addressToSell;
           // If the buy Dropdown is selected
         } else if (openDropdown.id == "buyDropdown") {
@@ -91,7 +90,7 @@ window.onclick = function(event) {
           // displayExchangeRate();
 
           // Set Dropdown value to Token acronym
-          document.getElementById("buy-button").innerText = event.target.attributes.id.value;
+          document.getElementById("buy-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
           return addressToBuy;
         } else {
           console.log("not working")
