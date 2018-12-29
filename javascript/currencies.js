@@ -46,15 +46,19 @@ function BuyFunction() {
 }
 
 
-// Close the dropdown menu if the user clicks outside of it
+// Close the dropdown menu if User selects a token from dropdown
 window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
+  console.log(event);
+  console.log(event.target.parentElement.className);
+  if (!event.target.parentElement.className == "sell-token-content"){
+    console.log(event);
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
     for (i = 0; i < dropdowns.length; i++) {
       var openDropdown = dropdowns[i];
       if (openDropdown.classList.contains('show')) {
         openDropdown.classList.remove('show');
+
         // If the sell Dropdown is selected
         if (openDropdown.id == "sellDropdown") {
           console.log(event.target.attributes[3].value);
@@ -70,8 +74,10 @@ window.onclick = function(event) {
           // Refresh Expected rate
           // displayExchangeRate();
 
-          // Set Dropdown value to Token acronym
+          // Set Dropdown value to Token name & symbol
           document.getElementById("sell-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
+
+
           return addressToSell;
           // If the buy Dropdown is selected
         } else if (openDropdown.id == "buyDropdown") {
