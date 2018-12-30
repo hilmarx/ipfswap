@@ -1,10 +1,15 @@
 @import 'select-currencies.css';
 @import 'navbar.css';
 
+.container {
+  background-color: pink;
+}
+
 #sell-dropdown {
   display: flex;
   flex-direction: column;
   background-color: grey;
+  width: 200px;
 }
 
 .sell-title {
@@ -14,4 +19,47 @@
 .sell-token-content {
   background-color: rgba(12, 12, 12, 0.3);
   margin-bottom: 10px;
+}
+
+#buy-dropdown {
+  display: flex;
+  flex-direction: column;
+  background-color: grey;
+  width: 200px;
+}
+
+.buy-title {
+  align-self: baseline;
+}
+
+.buy-token-content {
+  background-color: rgba(12, 12, 12, 0.3);
+  margin-bottom: 10px;
+}
+
+/*Input fields*/
+
+
+.sell-input-content {
+  display: flex;
+  background-color: red;
+  width: 200px;
+}
+
+.buy-input-content {
+  display: flex;
+  background-color: red;
+  width: 200px;
+}
+
+#src-amount {
+  align-self: baseline;
+  border: none;
+  border-bottom: 2px solid black;
+}
+
+#dest-amount {
+  align-self: baseline;
+  border: none;
+  border-bottom: 2px solid black;
 }

@@ -50,8 +50,10 @@ function BuyFunction() {
 window.onclick = function(event) {
   console.log(event);
   console.log(event.target.parentElement.className);
-  if (!event.target.parentElement.className == "sell-token-content"){
+  // Check condition if User pressed anything else than the image or the title of the token
+  if (event.target.parentElement.className != "sell-token-content" && event.target.parentElement.className != "buy-token-content"){
     console.log(event);
+    console.log("Im insinde if statement")
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
     for (i = 0; i < dropdowns.length; i++) {

@@ -17,9 +17,9 @@
 
   <!-- Import Ethers.js library-->
   <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js"
-    charset="utf-8"
-    type="text/javascript">
-  </script>
+  charset="utf-8"
+  type="text/javascript">
+</script>
 
 </head>
 
@@ -36,6 +36,7 @@
 
   <div class="wrapper">
     <div class="container">
+
       <!-- Token Selection -->
       <div class="row justify-content-around">
         <div class="col-4 text-center">
@@ -53,67 +54,74 @@
         </div>
         <div class="col-4 text-center">
           <div class="dropdown" id="buy-dropdown">
-            <div class="buy title">
+            <div class="buy-title">
               <h5>TO</h5>
             </div>
             <div class="buy-token-content">
-              <div class="buy-token-img">
-                <img src="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0x006bea43baa3f7a6f765f14f10a1a1b08334ef45.png" alt="" height="42" width="42">
-              </div>
-              <div class="buy-token-name">
-                <button onclick="BuyFunction()" class="dropbtn" id="buy-button">KyberNetwork - (KNC)</button>
-                <div id="buyDropdown" class="dropdown-content">
-                </div>
+              <img class="image2" onclick="BuyFunction()" src="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0x006bea43baa3f7a6f765f14f10a1a1b08334ef45.png" alt="" height="42" width="42">
+              <h6 onclick="BuyFunction()" class="dropbtn" id="buy-button">KyberNetwork - (KNC)</h6>
+              <div id="buyDropdown" class="dropdown-content">
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- FORM TO SUBMIT VALUES -->
       <form action="" id="trade-form">
+
+        <div class="row justify-content-around">
+
+          <div class="col-4 text-center">
+
+            <!-- Div that contains input and h6 illustrating the tokens symbol -->
+            <div class="sell-input-content">
+              <input class="form-control" id="src-amount" type="number" name="sell-amount" placeholder="0" onkeyup="sellExchangeRate()">
+              <h6>ETH</h6>
+            </div>
+
+          </div>
+
+          <div class="col-4 text-center">
+
+
+            <div class="buy-input-content">
+              <input id="dest-amount" type="text" name="buy-amount" placeholder="0" onkeyup="buyExchangeRate()">
+              <h6>KNC</h6>
+            </div>
+
+          </div>
+
+        </div>
+
         <div class="row justify-content-around">
           <div class="col-4 text-center">
-            <label for="">Sell</label><br>
-            <ul id="sell-form">
-              <input id="src-amount" type="number" name="sell-amount" placeholder="amount" onkeyup="sellExchangeRate()"><br>
-            </ul>
-          </div>
-          <div class="col-4 text-center">
-            <label for="">Buy</label><br>
-            <ul id="buy-form">
-              <input id="dest-amount" type="text" name="buy-amount" placeholder="amount" onkeyup="buyExchangeRate()"><br>
-            </ul>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4"></div>
-          <div class="col-md-4">
-            <h3>Expected Exchange Rate:</h3>
+            <h6>Expected Exchange Rate:</h6>
             <div class="exchange-rate"></div>
             <input id="swap-button" type="submit" value="SWAP">
 
           </div>
-          <div class="col-md-4"></div>
         </div>
+
       </form>
     </div>
   </div>
 
-  <!-- JAVASCRIPT -->
+<!-- JAVASCRIPT -->
 
-  <!-- Trade function -->
-  <script language="javascript" type="text/javascript" src="javascript/trade5.js"></script>
+<!-- Trade function -->
+<script language="javascript" type="text/javascript" src="javascript/trade5.js"></script>
 
-  <!-- Show available currencies-->
-  <script language="javascript" type="text/javascript" src="javascript/currencies.js"></script>
+<!-- Show available currencies-->
+<script language="javascript" type="text/javascript" src="javascript/currencies.js"></script>
 
-  <!-- Get Expected Rates -->
-  <script language="javascript" type="text/javascript" src="javascript/get-expected-rate2.js"></script>
+<!-- Get Expected Rates -->
+<script language="javascript" type="text/javascript" src="javascript/get-expected-rate2.js"></script>
 
-  <!-- Jquery, Popper.js and Bootstrap.js -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<!-- Jquery, Popper.js and Bootstrap.js -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
 </body>
 
