@@ -1,65 +1,92 @@
 @import 'select-currencies.css';
 @import 'navbar.css';
 
+.wrapper {
+  background-color: rgba(230, 230, 230, 0.2);
+}
+
 .container {
-  background-color: pink;
+  background-color: white;
 }
 
 #sell-dropdown {
   display: flex;
   flex-direction: column;
-  background-color: grey;
+  background-color: black;
   width: 200px;
 }
 
 .sell-title {
   align-self: baseline;
+  color: white;
 }
 
 .sell-token-content {
-  background-color: rgba(12, 12, 12, 0.3);
   margin-bottom: 10px;
 }
 
 #buy-dropdown {
   display: flex;
   flex-direction: column;
-  background-color: grey;
+  background-color: black;
   width: 200px;
 }
 
 .buy-title {
   align-self: baseline;
+  color: white;
 }
 
 .buy-token-content {
-  background-color: rgba(12, 12, 12, 0.3);
   margin-bottom: 10px;
 }
+
+/*Token name selection*/
+
+.dropbtn {
+  background: black;
+}
+
 
 /*Input fields*/
 
 
 .sell-input-content {
   display: flex;
-  background-color: red;
   width: 200px;
 }
 
 .buy-input-content {
   display: flex;
-  background-color: red;
   width: 200px;
 }
+
+/*Amount input fields*/
 
 #src-amount {
   align-self: baseline;
   border: none;
   border-bottom: 2px solid black;
+  opacity: 1;
+  background-color: pink;
+  border-radius: 0;
+  height: 30px;
 }
 
 #dest-amount {
   align-self: baseline;
   border: none;
   border-bottom: 2px solid black;
+  opacity: 1;
+  background-color: pink;
+  border-radius: 0;
+  height: 30px;
 }
+
+/*Input symbol*/
+.input-symbol {
+  align-self: baseline;
+  border-bottom: 2px solid black;
+  height: 25px;
+}
+
