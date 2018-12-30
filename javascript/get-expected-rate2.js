@@ -9,7 +9,7 @@ kyberNetworkProxyContract = new web3.eth.Contract(kyberNetworkProxyABI, kyberNet
 let src = addressToSell;
 let dest = addressToBuy;
 
-let srcAmount
+let srcAmount;
 let destAmount;
 
 let expectedRate;
@@ -20,11 +20,13 @@ const destAmountHTML = document.getElementById("dest-amount");
 const srcAmountHTML = document.getElementById("src-amount");
 const expectedRateHTML = document.querySelector(".exchange-rate");
 
-// Display Exchange Rate
+// Display Exchange Rate to User on Front End
 
 function displayExchangeRate() {
+  // Calc expected Rate in ETH not Wei
+  expectedRateEth = expectedRate / (10 ** 18);
   // Calcualte user Exchange rate
-  expectedRateHTML.innerText = expectedRate / (10 ** 18);
+  expectedRateHTML.innerText = `1 ${srcSymbol} = ${expectedRateEth} ${destSymbol}`;
   // expectedRate / (10 ** 18)
 }
 

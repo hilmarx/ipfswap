@@ -2,17 +2,23 @@
 @import 'navbar.css';
 
 .wrapper {
-  background-color: rgba(230, 230, 230, 0.2);
+  background-color: rgba(1, 1, 1, 0.9);
+  height: 100vh;
 }
 
 .container {
-  background-color: white;
+  background-color: rgba(1, 1, 1, 0.95);
+  color: white;
+}
+
+.buffer {
+  padding-top: 25px;
+  padding-bottom: 25px;
 }
 
 #sell-dropdown {
   display: flex;
   flex-direction: column;
-  background-color: black;
   width: 200px;
 }
 
@@ -28,7 +34,6 @@
 #buy-dropdown {
   display: flex;
   flex-direction: column;
-  background-color: black;
   width: 200px;
 }
 
@@ -66,27 +71,53 @@
 #src-amount {
   align-self: baseline;
   border: none;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid white;
   opacity: 1;
-  background-color: pink;
+  background-color: rgba(1, 1, 1, 0.95);
   border-radius: 0;
   height: 30px;
+  color: white;
 }
 
 #dest-amount {
   align-self: baseline;
   border: none;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid white;
   opacity: 1;
-  background-color: pink;
+  background-color: rgba(1, 1, 1, 0.95);
   border-radius: 0;
   height: 30px;
+  color: white;
 }
 
 /*Input symbol*/
 .input-symbol {
   align-self: baseline;
-  border-bottom: 2px solid black;
-  height: 25px;
+  border-bottom: 2px solid white;
+  height: 25.5px;
 }
 
+/*Swap Button*/
+
+#swap-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/*CREDITS*/
+
+.credits {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid white;
+  width: 800px;
+  margin-top: 40px;
+  margin-bottom: 10px;
+}
+
+.credit-item {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 50px;
+  padding-right: 50px;
+}

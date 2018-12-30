@@ -36,29 +36,30 @@
 
   <div class="wrapper">
     <div class="container">
+      <div class="buffer"></div>
 
       <!-- Token Selection -->
-      <div class="row justify-content-around">
-        <div class="col-4 text-center">
+      <div class="row justify-content-md-center">
+        <div class="col-md-auto text-center">
           <div class="dropdown" id="sell-dropdown">
             <div class="sell-title">
               <h5>FROM</h5>
             </div>
             <div class="sell-token-content">
-              <img class="image1" onclick="SellFunction()" src="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0x006bea43baa3f7a6f765f14f10a1a1b08334ef45.png" alt="" height="42" width="42">
+              <img class="image1" onclick="SellFunction()" src="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0x006bea43baa3f7a6f765f14f10a1a1b08334ef45.png" alt="" height="80" width="80">
               <h6 class="dropbtn" id="sell-button" onclick="SellFunction()">Ethereum - (ETH)</h6>
               <div id="sellDropdown" class="dropdown-content">
               </div>
             </div>
           </div>
         </div>
-        <div class="col-4 text-center">
+        <div class="col-md-auto text-center">
           <div class="dropdown" id="buy-dropdown">
             <div class="buy-title">
               <h5>TO</h5>
             </div>
             <div class="buy-token-content">
-              <img class="image2" onclick="BuyFunction()" src="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0x006bea43baa3f7a6f765f14f10a1a1b08334ef45.png" alt="" height="42" width="42">
+              <img class="image2" onclick="BuyFunction()" src="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0x006bea43baa3f7a6f765f14f10a1a1b08334ef45.png" alt="" height="80" width="80">
               <h6 onclick="BuyFunction()" class="dropbtn" id="buy-button">KyberNetwork - (KNC)</h6>
               <div id="buyDropdown" class="dropdown-content">
               </div>
@@ -70,9 +71,9 @@
       <!-- FORM TO SUBMIT VALUES -->
       <form action="" id="trade-form">
 
-        <div class="row justify-content-around">
+        <div class="row justify-content-md-center">
 
-          <div class="col-4 text-center">
+          <div class="col-md-auto text-center">
 
             <!-- Div that contains input and h6 illustrating the tokens symbol -->
             <div class="sell-input-content">
@@ -81,8 +82,7 @@
             </div>
 
           </div>
-
-          <div class="col-4 text-center">
+            <div class="col-md-auto text-center">
 
 
             <div class="buy-input-content">
@@ -92,18 +92,42 @@
 
           </div>
 
+
         </div>
 
-        <div class="row justify-content-around">
-          <div class="col-4 text-center">
+        <div class="row justify-content-md-center">
+          <div class="col-md-auto text-center">
+            <input class="btn btn-outline-light" id="swap-button" type="submit" value="SWAP">
             <h6>Expected Exchange Rate:</h6>
             <div class="exchange-rate"></div>
-            <input id="swap-button" type="submit" value="SWAP">
 
           </div>
         </div>
 
       </form>
+
+
+      <div class="row justify-content-md-center">
+        <div class="col-md-auto text-center">
+          <div class="credits">
+            <div class="credit-item">
+              <img src="images/ipfs-logo-white.png" alt="ipfs-logo" height="70" width="150">
+
+            </div>
+            <div class="credit-item">
+              <img src="images/ethereum-logo-white.png" alt="ipfs-logo" height="70" width="150">
+
+            </div>
+            <div class="credit-item">
+
+              <img src="images/kyber-logo-white.png" alt="ipfs-logo" height="70" width="150">
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
     </div>
   </div>
 

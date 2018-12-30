@@ -1,5 +1,5 @@
 // Fetching and displaying available ERC20s
-url = "https://ropsten-api.kyber.network/currencies"
+url = "https://ropsten-api.kyber.network/currencies";
 
 // const sellForm = document.getElementById("sell-form");
 // const buyForm = document.getElementById("buy-form");
@@ -27,6 +27,11 @@ function fetchCurrencies() {
 }
 
 var currencyList = fetchCurrencies();
+
+// Assign currently selected src and dest token symbols
+
+let srcSymbol = "ETH";
+let destSymbol = "KNC";
 
 
 // Fetch the selected Tokens addresses
@@ -76,6 +81,9 @@ window.onclick = function(event) {
           // Refresh Expected rate
           // displayExchangeRate();
 
+          // Set src Token Symbol
+          srcSymbol = event.target.attributes.id.value;
+
           // Set Dropdown value to Token name & symbol
           document.getElementById("sell-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
 
@@ -93,6 +101,9 @@ window.onclick = function(event) {
 
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()
+
+          // Set src Token Symbol
+          destSymbol = event.target.attributes.id.value;
 
           // Refresh Expected rate
           // displayExchangeRate();
