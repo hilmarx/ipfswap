@@ -14,6 +14,7 @@ async function fetchAddress() {
   });
 };
 
+
 const USER_ACCOUNT_2 = fetchAddress();
 
 // Input own Address
