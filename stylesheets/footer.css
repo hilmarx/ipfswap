@@ -1,10 +1,16 @@
+.push {
+  height: 30px;
+}
+
 .footer {
+  height: 30px;
   background: black;
   display: flex;
   justify-content: center;
-  height: 40px;
   padding: 0px 50px;
-}
+/*  border-top: 0.1px solid white;
+*/}
+
 .footer-links {
   display: flex;
   align-items: center;

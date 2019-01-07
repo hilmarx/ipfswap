@@ -2,19 +2,36 @@
 @import 'navbar.css';
 @import 'footer.css';
 
+html, body {
+/*  height: 100%;
+  margin: 0;*/
+  background-color: black;
+}
+
 .wrapper {
-  background-color: rgba(1, 1, 1, 0.9);
-  height: 100vh;
+  background-color: black;
+  min-height: 100%;
+  /* From the web*/
+  /* Equal to height of footer */
+  /* But also accounting for potential margin-bottom of last child */
+  margin-bottom: -40px;
+}
+
+.test {
+  background-color: inherit;
+  padding-top: 85px;
 }
 
 .container {
-  background-color: rgba(1, 1, 1, 0.95);
+
+  background-color: rgba(122, 32, 99, 0.2);
+  padding-top: 40px;
   color: white;
 }
 
+
 .buffer {
-  padding-top: 45px;
-  padding-bottom: 25px;
+  padding-top: 70px;
 }
 
 #sell-dropdown {
@@ -30,7 +47,7 @@
 
 .sell-token-content {
   margin-bottom: 10px;
-  background-color: black;
+  background-color: inherit;
 }
 
 #buy-dropdown {
@@ -46,13 +63,13 @@
 
 .buy-token-content {
   margin-bottom: 10px;
-  background-color: black;
+  background-color: inherit;
 }
 
 /*Token name selection*/
 
 .dropbtn {
-  background: black;
+  background-color: inherit;
   color: white;
 }
 
@@ -77,7 +94,7 @@
   border: none;
   border-bottom: 2px solid white;
   opacity: 1;
-  background-color: rgba(1, 1, 1, 0.95);
+  background-color: inherit;
   border-radius: 0;
   height: 30px;
   color: white;
@@ -88,7 +105,7 @@
   border: none;
   border-bottom: 2px solid white;
   opacity: 1;
-  background-color: rgba(1, 1, 1, 0.95);
+  background-color: inherit;
   border-radius: 0;
   height: 30px;
   color: white;
@@ -98,7 +115,7 @@
 .input-symbol {
   align-self: baseline;
   border-bottom: 2px solid white;
-  height: 25.5px;
+  height: 25px;
 }
 
 /*Swap Button*/
@@ -111,19 +128,17 @@
 /*CREDITS*/
 
 .credits {
-  display: flex;
-  justify-content: space-around;
   border-top: 1px solid white;
-  width: auto;
   margin-top: 40px;
   margin-bottom: 10px;
+  margin-right: 20px !important;
+  margin-left: 20px !important;
 }
+
 
 .credit-item {
   padding-top: 10px;
   padding-bottom: 10px;
-  padding-left: 50px;
-  padding-right: 50px;
 }
 
 /*Make Token logos round*/
