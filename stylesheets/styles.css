@@ -3,14 +3,13 @@
 @import 'footer.css';
 
 html, body {
-
   margin: 0;
   height: 100%;
   background-color: black;
 }
 
 .wrapper {
-  background-color: black;
+  background-color: #323c41;
   min-height: 100%;
   /* From the web*/
   /* Equal to height of footer */
@@ -18,15 +17,14 @@ html, body {
   margin-bottom: -40px;
 }
 
-.test {
+.buffer-top {
   background-color: inherit;
-  padding-top: 65px;
 }
 
 .container {
-  background-color: black;
+  background-color: #323c41;
   padding-top: 40px;
-  color: black;
+  color: white;
 }
 
 
@@ -34,16 +32,27 @@ html, body {
   padding-top: 70px;
 }
 
-.swap-card {
-  background-color: white;
-  opacity: 0.9;
- /* margin-right: 190px !important;
-  margin-left: 190px !important;*/
-/*  margin-right: 18vw;
-  margin-left: 18vw;*/
+.title {
+  margin-right: 3em !important;
+  margin-left: 3em !important;
+  margin-bottom: 30px;
   border-radius: 2px;
-  box-shadow: 1px 1px 2px rgba(1, 1, 1, 0.7);
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.swap-card {
+  background-color: black;
+/*  opacity: 0.9;
+*/ /* margin-right: 190px !important;
+  margin-left: 190px !important;*/
+  margin-right: 3em;
+  margin-left: 3em;
+  border-radius: 2px;
+  box-shadow: 1px 1px 2px rgba(1, 1, 1, 0.3);
   border: 1px solid rgba(250, 250, 250, 0.1);
+  padding-bottom: 30px;
+  padding-top: 30px;
 }
 
 /*.swap-card-content {
@@ -52,7 +61,8 @@ html, body {
 
 #sell-dropdown {
 /*  display: flex;
-*/  flex-direction: column;
+*/
+  flex-direction: column;
   width: 200px;
 }
 
@@ -63,6 +73,33 @@ html, body {
 .sell-token-content {
   margin-bottom: 10px;
   background-color: inherit;
+}
+
+.token-content  {
+  height: 155px;
+  padding-top: 10px;
+  margin-bottom: 10px;
+  background-color: inherit;
+  /*new shit*/
+  border: 0 solid;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
+  outline: 1px solid;
+  outline-color: rgba(255, 255, 255, .5);
+  outline-offset: 0px;
+  text-shadow: none;
+  transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/*HOVER THE SELL CONTENT*/
+/*/
+*/
+
+.token-content:hover {
+  border: 1px solid;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, .5), 0 0 20px rgba(255, 255, 255, .2);
+  outline-color: rgba(255, 255, 255, 0);
+  outline-offset: 15px;
+  text-shadow: 1px 1px 2px #427388;
 }
 
 #buy-dropdown {
@@ -84,7 +121,7 @@ html, body {
 
 .dropbtn {
   background-color: inherit;
-  color: black;
+  color: white;
 }
 
 
@@ -108,7 +145,7 @@ html, body {
 #src-amount {
   align-self: baseline;
   border: none;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid white;
   opacity: 1;
   background-color: inherit;
   border-radius: 0;
@@ -119,7 +156,7 @@ html, body {
 #dest-amount {
   align-self: baseline;
   border: none;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid white;
   opacity: 1;
   background-color: inherit;
   border-radius: 0;
@@ -130,7 +167,7 @@ html, body {
 /*Input symbol*/
 .input-symbol {
   align-self: baseline;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid white;
   height: 25px;
 }
 
@@ -139,16 +176,22 @@ html, body {
 #swap-button {
   margin-top: 20px;
   margin-bottom: 20px;
+  color: white;
 }
 
 /*CREDITS*/
 
 .credits {
-  border-top: 1px solid white;
-  margin-top: 40px;
-  margin-bottom: 10px;
-  margin-right: 20px !important;
-  margin-left: 20px !important;
+  background-color: black;
+  margin-top: 30px;
+  border-radius: 2px;
+  box-shadow: 1px 1px 2px rgba(1, 1, 1, 0.3);
+  border: 1px solid rgba(250, 250, 250, 0.1);
+  padding-bottom: 10px;
+/*  margin-right: 20px !important;
+  margin-left: 20px !important;*/
+  margin-right: 3em !important;
+  margin-left: 3em !important;
 }
 
 

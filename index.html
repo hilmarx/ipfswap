@@ -35,20 +35,28 @@
   <!-- PAGE CONTENT -->
 
   <div class="wrapper">
-    <div class="test">
+    <div class="buffer-top">
     <div class="container">
+
+      <!-- Title -->
+      <div class="row justify-content-md-center title">
+        <div class="col-md-auto text-center">
+          <h3>Trade ERC20 Tokens on IPFS</h3>
+        </div>
+      </div>
 
       <!-- Swap Card Start -->
       <div class="swap-card">
         <form action="" id="trade-form">
+
         <!-- Token Selection -->
-        <div class="row justify-content-md-center buffer">
+        <div class="row justify-content-md-center">
           <div class="col-md-auto text-center swap-card-content">
             <div class="dropdown" id="sell-dropdown">
               <div class="sell-title">
                 <h5>FROM</h5>
               </div>
-              <div class="sell-token-content">
+              <div class="token-content" id="sell-content">
                 <img class="token-logo" onclick="SellFunction()" src="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0x006bea43baa3f7a6f765f14f10a1a1b08334ef45.png" alt="">
                 <h6 class="dropbtn" id="sell-button" onclick="SellFunction()">Ethereum - (ETH)</h6>
                 <div id="sellDropdown" class="dropdown-content">
@@ -61,7 +69,7 @@
               <div class="buy-title">
                 <h5>TO</h5>
               </div>
-              <div class="buy-token-content">
+              <div class="token-content" id="buy-content">
                 <img class="token-logo" onclick="BuyFunction()" src="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0xdd974d5c2e2928dea5f71b9825b8b646686bd200.png" alt="">
                 <h6 onclick="BuyFunction()" class="dropbtn" id="buy-button">KyberNetwork - (KNC)</h6>
                 <div id="buyDropdown" class="dropdown-content">
@@ -80,7 +88,7 @@
               <!-- Div that contains input and h6 illustrating the tokens symbol -->
               <div class="sell-input-content">
                 <input class="form-control" id="src-amount" type="number" name="sell-amount" placeholder="0" onkeyup="sellExchangeRate()">
-                <h6 class="input-symbol">ETH</h6>
+                <h6 class="input-symbol" id="sell-symbol">ETH</h6>
               </div>
 
             </div>
@@ -89,7 +97,7 @@
 
               <div class="buy-input-content">
                 <input class="form-control" id="dest-amount" type="text" name="buy-amount" placeholder="0" onkeyup="buyExchangeRate()">
-                <h6 class="input-symbol">KNC</h6>
+                <h6 class="input-symbol" id="buy-symbol">KNC</h6>
               </div>
 
             </div>

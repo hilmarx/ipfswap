@@ -56,7 +56,7 @@ window.onclick = function(event) {
   console.log(event);
   console.log(event.target.parentElement.className);
   // Check condition if User pressed anything else than the image or the title of the token
-  if (event.target.parentElement.className != "sell-token-content" && event.target.parentElement.className != "buy-token-content"){
+  if (event.target.parentElement.id != "sell-content" && event.target.parentElement.id != "buy-content"){
     console.log(event);
     console.log("Im insinde if statement")
     var dropdowns = document.getElementsByClassName("dropdown-content");
@@ -87,6 +87,9 @@ window.onclick = function(event) {
           // Set Dropdown value to Token name & symbol
           document.getElementById("sell-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
 
+          // Set sell-symbol Symbol to srcSybol
+          document.getElementById('sell-symbol').innerText = srcSymbol
+
 
           return addressToSell;
           // If the buy Dropdown is selected
@@ -110,6 +113,11 @@ window.onclick = function(event) {
 
           // Set Dropdown value to Token acronym
           document.getElementById("buy-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
+
+          // Set buy-symbol to srcSybol
+          document.getElementById('buy-symbol').innerText = destSymbol
+
+
           return addressToBuy;
         } else {
           console.log("not working")
