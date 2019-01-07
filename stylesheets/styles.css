@@ -94,11 +94,13 @@ html, body {
 .sell-input-content {
   display: flex;
   max-width: 200px;
+  margin: 0 auto;
 }
 
 .buy-input-content {
   display: flex;
   max-width: 200px;
+  margin: 0 auto
 }
 
 /*Amount input fields*/
