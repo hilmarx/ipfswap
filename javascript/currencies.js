@@ -7,26 +7,61 @@ url = "https://ropsten-api.kyber.network/currencies";
 const sellForm = document.getElementById("sellDropdown");
 const buyForm = document.getElementById("buyDropdown");
 
+// function fetchCurrencies() {
+//   fetch(url)
+//     .then(response => response.json())
+//     .then((data) => {
+//       data.data.forEach((currency) => {
+//         // Input Currencies to buy
+//                   //<a href="#">EOS</a>
+//         let buyItem =  `<a href="#"name="${currency.name}" id="${currency.symbol}" value="${currency.address}">${currency.name} - (${currency.symbol})</a>`
+//         // let buyItem = `<input type="radio" name="buyItem" id="buy-${currency.symbol}" value="${currency.symbol}">${currency.name} - ${currency.symbol}<br>`;
+//         buyForm.insertAdjacentHTML("beforeend", buyItem);
+
+//         // Input Currencies to sell
+//         let sellItem =  `<a href="#" name="${currency.name}" id="${currency.symbol}" value="${currency.address}">${currency.name} - (${currency.symbol})</a>`
+//         // let sellItem = `<input type="radio" name="sellItem" id="sell-${currency.symbol}" value="${currency.symbol}">${currency.name} - ${currency.symbol}<br>`;
+//         sellForm.insertAdjacentHTML("beforeend", sellItem);
+//       });
+//   });
+// }
+
+// ################################################################
+
+// To display the Tokens in an alphabetical order, the fetchCurrencies function needs to only fetch the available names of the tokens wheras a seperate function createCurrencyList will create the necessary HTML Tags
+
+const currencyArray = [];
+let item;
+
+
+// Create HTML tags to display currencies to user through the list
+
+function createHtmlTags() {
+  currencyArray.forEach((currencyArray) => {
+    // Input Currencies to buy
+    let currencyTag = `<a href="#"name="${currencyArray[0]}" id="${currencyArray[1]}" value="${currencyArray[2]}">${currencyArray[0]} - (${currencyArray[1]})</a>`
+    buyForm.insertAdjacentHTML("beforeend", currencyTag);
+    sellForm.insertAdjacentHTML("beforeend", currencyTag);
+  })
+}
+
+// Fetch currencies from KyberAPI and store sorted in currencyArray Array. Then call createHtmlTags function
 function fetchCurrencies() {
   fetch(url)
     .then(response => response.json())
     .then((data) => {
       data.data.forEach((currency) => {
-        // Input Currencies to buy
-                  //<a href="#">EOS</a>
-        let buyItem =  `<a href="#"name="${currency.name}" id="${currency.symbol}" value="${currency.address}">${currency.name} - (${currency.symbol})</a>`
-        // let buyItem = `<input type="radio" name="buyItem" id="buy-${currency.symbol}" value="${currency.symbol}">${currency.name} - ${currency.symbol}<br>`;
-        buyForm.insertAdjacentHTML("beforeend", buyItem);
-
-        // Input Currencies to sell
-        let sellItem =  `<a href="#" name="${currency.name}" id="${currency.symbol}" value="${currency.address}">${currency.name} - (${currency.symbol})</a>`
-        // let sellItem = `<input type="radio" name="sellItem" id="sell-${currency.symbol}" value="${currency.symbol}">${currency.name} - ${currency.symbol}<br>`;
-        sellForm.insertAdjacentHTML("beforeend", sellItem);
+        item = [currency.name, currency.symbol, currency.address, currency.decimals]
+        currencyArray.push(item);
+        console.log("1");
       });
+    }).then((result) => {
+      currencyArray.sort();
+      createHtmlTags();
   });
 }
 
-var currencyList = fetchCurrencies();
+fetchCurrencies();
 
 // Assign currently selected src and dest token symbols
 
