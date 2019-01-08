@@ -59,7 +59,7 @@ html, body {
   align-content: center !important;
 }*/
 
-#sell-dropdown {
+#sell-card {
 /*  display: flex;
 */
   flex-direction: column;
@@ -103,7 +103,7 @@ html, body {
   text-shadow: 1px 1px 2px #427388;
 }
 
-#buy-dropdown {
+#buy-card {
 /*  display: flex;
 */  flex-direction: column;
   width: 200px;

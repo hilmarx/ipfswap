@@ -52,7 +52,7 @@
         <!-- Token Selection -->
         <div class="row justify-content-md-center">
           <div class="col-md-auto text-center swap-card-content">
-            <div class="dropdown" id="sell-dropdown">
+            <div class="dropdown" id="sell-card">
               <div class="sell-title">
                 <h5>FROM</h5>
               </div>
@@ -60,12 +60,14 @@
                 <img class="token-logo" onclick="SellFunction()" src="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0x006bea43baa3f7a6f765f14f10a1a1b08334ef45.png" alt="">
                 <h6 class="dropbtn" id="sell-button" onclick="SellFunction()">Ethereum - (ETH)</h6>
                 <div id="sellDropdown" class="dropdown-content">
+                  <input class="searchFilter"type="text" placeholder="Search.." id="sellSearch">
                 </div>
+
               </div>
             </div>
           </div>
           <div class="col-md-auto text-center swap-card-content">
-            <div class="dropdown" id="buy-dropdown">
+            <div class="dropdown" id="buy-card">
               <div class="buy-title">
                 <h5>TO</h5>
               </div>
@@ -73,6 +75,7 @@
                 <img class="token-logo" onclick="BuyFunction()" src="https://raw.githubusercontent.com/TrustWallet/tokens/master/images/0xdd974d5c2e2928dea5f71b9825b8b646686bd200.png" alt="">
                 <h6 onclick="BuyFunction()" class="dropbtn" id="buy-button">KyberNetwork - (KNC)</h6>
                 <div id="buyDropdown" class="dropdown-content">
+                  <input class="searchFilter"type="text" placeholder="Search.." id="buySearch">
                 </div>
               </div>
             </div>

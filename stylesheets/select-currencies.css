@@ -27,6 +27,8 @@
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
+  max-height:400px;
+  overflow:scroll;
 }
 
 /* Links inside the dropdown */
@@ -36,6 +38,23 @@
   text-decoration: none;
   display: block;
 }
+
+/* The search field */
+.searchFilter {
+  border-box: box-sizing;
+  background-image: url('searchicon.png');
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+/* The search field when it gets focus/clicked on */
+#myInput:focus {outline: 3px solid #ddd;}
+
+
 
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #ddd}
