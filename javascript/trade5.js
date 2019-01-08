@@ -4,6 +4,22 @@ var web3 = new Web3(Web3.givenProvider);
 
 var utils = web3.utils;
 
+// Check if web3 is injected
+
+window.addEventListener('load', function() {
+  if (typeof web3 !== 'undefined') {
+    console.log('web3 is enabled')
+    if (web3.currentProvider.isMetaMask === true) {
+      console.log('MetaMask is active')
+    } else {
+      console.log('MetaMask is not available')
+    }
+  } else {
+    console.log('web3 is not found')
+    // Create Error Message
+  }
+})
+
 // Fetch User Address
 async function fetchAddress() {
 

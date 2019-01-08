@@ -16,7 +16,6 @@ let destSymbol = "KNC";
 
 
 // Fetch the selected Tokens addresses
-console.log("currenciy file");
 let addressToSell = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 let addressToBuy = "0x4e470dc7321e84ca96fcaedd0c8abcebbaeb68c6";
 
