@@ -1,6 +1,7 @@
 @import 'select-currencies.css';
 @import 'navbar.css';
 @import 'footer.css';
+@import 'modal.css';
 
 html, body {
   margin: 0;

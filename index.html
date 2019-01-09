@@ -36,6 +36,26 @@
 
   <div class="wrapper">
     <div class="buffer-top">
+      <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Please install Metamask</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>IPFSWAP is a web3 based application.</p>
+              <p>In order to use it, please download the Metamask plugin</p>
+            </div>
+            <div class="modal-footer">
+              <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en" class="btn btn-primary" id="metamask-button"target="_blank" type="button" >Install Metamask</a>
+              <button type="button" id="close-button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
     <div class="container">
 
       <!-- Title -->
@@ -109,7 +129,7 @@
           </div>
 
           <div class="row justify-content-md-center">
-            <div class="col-md-auto text-center">
+            <div class="col-md-auto text-center swap-button-div">
               <input class="btn btn-outline-light" id="swap-button" type="submit" value="SWAP">
               <h6>Expected Exchange Rate:</h6>
               <div class="exchange-rate"></div>

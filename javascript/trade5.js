@@ -4,6 +4,31 @@ var web3 = new Web3(Web3.givenProvider);
 
 var utils = web3.utils;
 
+// Loader
+
+loader = `<div class="loader"></div>`;
+
+// HTML elements to add and delete
+
+swapButtonDiv = document.querySelector('.swap-button-div');
+swapButton = document.querySelector('#swap-button');
+swapButtonHtml = `<input class="btn btn-outline-light" id="swap-button" type="submit" value="SWAP">`;
+
+
+// Change Swap to Loader and back
+
+// Change Swap button to Loader
+function swapToLoader() {
+  swapButton.style.display = "none";
+  swapButtonDiv.insertAdjacentHTML("afterbegin", loader);
+}
+
+// Change Loader back to Swap Button
+function loaderToSwap() {
+  document.querySelector('.loader').remove();
+  swapButton.style.display = "";
+}
+
 // Check if web3 is injected
 window.addEventListener('load', function() {
   if (typeof web3 !== 'undefined' && web3.currentProvider !== null) {
@@ -16,30 +41,16 @@ window.addEventListener('load', function() {
   } else {
     // Change inner HTML of Error Pop UP
     console.log('web3 is not found')
-    const installMetaMask = `<div class="modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Modal body text goes here.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Save changes</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>`;
-    container = document.querySelector('.container');
-    container.insertAdjacentHTML("beforeend", installMetaMask);
+    console.log('Please install Metamask')
+    $('.modal').modal('show');
     // Create Error Message
   }
 })
+
+
+// Swap successful mondel
+
+document.querySelector('.modal')
 
 
 // Fetch User Address
@@ -59,6 +70,10 @@ const USER_ACCOUNT_2 = fetchAddress();
 const VENDOR_WALLET_ADDRESS = "0x483C5100C3E544Aef546f72dF4022c8934a6945E"
 const PRODUCT_ETH_PRICE = '0.3'
 const PRODUCT_ETH_WEI_PRICE = utils.toWei('0.3');
+
+// Define variable successful, which if set to false, will stop after the first tx and avoid asking to user to confirm the second one.
+
+let successful;
 
 // Let the trade begin
 
@@ -87,6 +102,11 @@ async function trade() {
 
     console.log("transactionData2 CHECK");
 
+    // Change Swap Button for loader
+    swapToLoader();
+
+
+
     txReceipt = await web3.eth.sendTransaction({
         from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
         to: kyberNetworkProxyAddress,
@@ -95,6 +115,9 @@ async function trade() {
         }).catch(error => console.log(error))
 
     console.log("txReceipt 2 CHECK");
+
+    // Change Loader for Swap Button
+    loaderToSwap();
 
   // If User chooses to sell ERC20 TOken
   }else {
@@ -106,12 +129,23 @@ async function trade() {
     transactionData = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
     console.log("transcationData CHECK");
 
+    // Change Swap Button for loader
+    swapToLoader();
+
+    successful = true;
+
     txReceipt = await web3.eth.sendTransaction({
         from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
         to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
         data: transactionData
-        }).catch(error => console.log(error))
+        }).catch(function(error) {
+          console.log(error);
+          loaderToSwap();
+          successful = false;
+        })
     console.log("txReceipt CHECK");
+
+    if (successful == false) return 0;
 
     transactionData = kyberNetworkProxyContract.methods.trade(
       addressToSell, //ERC20 srcToken
@@ -129,11 +163,22 @@ async function trade() {
         from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
         to: kyberNetworkProxyAddress,
         data: transactionData,
-        }).catch(error => console.log(error))
+        }).catch(function(error) {
+          console.log(error);
+          loaderToSwap();
+        })
 
     console.log("txReceipt 2 CHECK");
+
+    // Change Loader for SWAP Button
+    loaderToSwap();
   }
 
+  // Display Modal for a successful swap
+  document.querySelector('.modal-header').innerText = "Swap successful 👍";
+  document.querySelector('.modal-body').style.display = "none";
+  document.querySelector('#metamask-button').style.display = "none";
+  $('.modal').modal('show');
 }
 
 const tradeButton = document.querySelector("#swap-button");
