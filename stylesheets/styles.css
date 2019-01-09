@@ -72,6 +72,7 @@ html, body {
 
 .sell-title {
   align-self: baseline;
+  margin-top: 15px;
 }
 
 .sell-token-content {
@@ -115,6 +116,7 @@ html, body {
 
 .buy-title {
   align-self: baseline;
+  margin-top: 15px;
 }
 
 .buy-token-content {
@@ -228,4 +230,28 @@ html, body {
   border-radius: 50%;
   cursor: pointer;
 }
+
+/*Swap Image*/
+
+.swap-image-parent {
+  min-height: 40px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.swap-image {
+  width: 1em;
+  height: 1em;
+
+
+}
+
+.empty-swap-image {
+  width: 1em;
+  height: 1em;
+}
+
+
 
