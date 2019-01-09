@@ -81,6 +81,9 @@ async function trade() {
 
   srcAmountWei = `${srcAmount * (10 ** 18)}`;
 
+  // Set successful to true
+  successful = true;
+
   /*
   ########################
   ### TRADE EXECUTION ####
@@ -107,6 +110,9 @@ async function trade() {
 
     // Display Modal for a successful swap
     document.querySelector('.modal-header').innerText = "Please confirm the Swap with your web3 client🤖";
+    document.querySelector('.modal-body').style.display = "none";
+    document.querySelector('#metamask-button').style.display = "none";
+
     $('.modal').modal('show');
 
 
@@ -116,7 +122,13 @@ async function trade() {
         to: kyberNetworkProxyAddress,
         data: transactionData,
         value: srcAmountWei //ADDITIONAL FIELD HERE
-        }).catch(error => console.log(error))
+        }).catch(function(error) {
+          console.log(error);
+          loaderToSwap();
+          successful = false;
+        })
+
+    if (successful == false) return 0;
 
     console.log("txReceipt 2 CHECK");
 
@@ -144,8 +156,6 @@ async function trade() {
     document.querySelector('.modal-body').style.display = "none";
     document.querySelector('#metamask-button').style.display = "none";
     $('.modal').modal('show');
-
-    successful = true;
 
     txReceipt = await web3.eth.sendTransaction({
         from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
