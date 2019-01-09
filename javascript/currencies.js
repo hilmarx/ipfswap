@@ -75,7 +75,6 @@ window.onclick = function(event) {
   if (event.target.id == "sellSearch" || event.target.id == "buySearch") return 0;
   // Check condition if User pressed anything else than the image or the title of the token
   if (event.target.parentElement.id != "sell-content" && event.target.parentElement.id != "buy-content"){
-    console.log(event);
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
     for (i = 0; i < dropdowns.length; i++) {
@@ -85,7 +84,6 @@ window.onclick = function(event) {
 
         // If the sell Dropdown is selected
         if (openDropdown.id == "sellDropdown") {
-          console.log(event.target.attributes)
           addressToSell = `${event.target.attributes[4].value}`;
 
           // Get Source token decimal for GetExpectedRate function
@@ -93,7 +91,7 @@ window.onclick = function(event) {
           console.log(srcDecimal);
 
           // Calc srcQuantity with srcDecimal
-          srcQuantity = 10 ** srcDecimal
+          srcQuantity = `${10 ** srcDecimal}`;
           console.log(srcQuantity);
 
           // Re-run getExpectedRate function for new address pair
@@ -169,7 +167,6 @@ function filterFunction(event) {
 
   // Check if the inputted letter is somewhere in the selected currency name before the last index. changing the a[i].style.display to "" makes it visible, setting it to none makes it invisible from a css perspective
   for (i = 0; i < a.length; i++) {
-    console.log(a);
     txtValue = a[i].name;
     if (txtValue.toUpperCase().indexOf(filter) > -1) {
       a[i].style.display = "";
