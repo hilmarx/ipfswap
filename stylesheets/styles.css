@@ -5,12 +5,15 @@
 html, body {
   margin: 0;
   height: 100%;
-  background-color: black;
+  background: transparent;
 }
 
 .wrapper {
-  background-color: #323c41;
-  min-height: 100%;
+  background: linear-gradient(#e66465, #9198e5);
+/*  background-image: url('../images/ocean.jpg'), linear-gradient(-225deg, rgba(0,101,168,0.6) 0%, rgba(0,36,61,0.6) 50%);
+*//*  background-color: #323c41;
+  background-image: url('images/ocean.jpg');
+*/  min-height: 100%;
   /* From the web*/
   /* Equal to height of footer */
   /* But also accounting for potential margin-bottom of last child */
@@ -22,7 +25,7 @@ html, body {
 }
 
 .container {
-  background-color: #323c41;
+  background-color: transparent;
   padding-top: 40px;
   color: white;
 }
@@ -42,7 +45,7 @@ html, body {
 }
 
 .swap-card {
-  background-color: black;
+  background-color: rgba(255, 255, 255, 0.2);
 /*  opacity: 0.9;
 */ /* margin-right: 190px !important;
   margin-left: 190px !important;*/
@@ -97,7 +100,7 @@ html, body {
 
 .token-content:hover {
   border: 1px solid;
-  box-shadow: inset 0 0 20px rgba(255, 255, 255, .5), 0 0 20px rgba(255, 255, 255, .2);
+  box-shadow: inset 0 0 50px rgba(255, 255, 255, .5), 0 0 20px rgba(255, 255, 255, .2);
   outline-color: rgba(255, 255, 255, 0);
   outline-offset: 15px;
   text-shadow: 1px 1px 2px #427388;
@@ -179,17 +182,23 @@ html, body {
   margin-bottom: 20px;
   color: white;
   font-weight: lighter;
+  border:2px solid white;
+  border-radius:5px;
+  box-shadow:2px 2px white;
 }
 
 #swap-button:hover {
-  background-color: #323c41;
+  background-color: rgba(255, 255, 255, 0);
   font-weight: bold;
+  box-shadow:0 0 0;
+  transform:translate(2px,2px);
 }
+
 
 /*CREDITS*/
 
 .credits {
-  background-color: black;
+  background-color: rgba(255, 255, 255, 0.2);
   margin-top: 30px;
   border-radius: 2px;
   box-shadow: 1px 1px 2px rgba(1, 1, 1, 0.3);
@@ -214,3 +223,4 @@ html, body {
   border-radius: 50%;
   cursor: pointer;
 }
+

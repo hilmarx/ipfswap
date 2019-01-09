@@ -5,9 +5,8 @@ var web3 = new Web3(Web3.givenProvider);
 var utils = web3.utils;
 
 // Check if web3 is injected
-
 window.addEventListener('load', function() {
-  if (typeof web3 !== 'undefined') {
+  if (typeof web3 !== 'undefined' && web3.currentProvider !== null) {
     console.log('web3 is enabled')
     if (web3.currentProvider.isMetaMask === true) {
       console.log('MetaMask is active')
@@ -15,10 +14,33 @@ window.addEventListener('load', function() {
       console.log('MetaMask is not available')
     }
   } else {
+    // Change inner HTML of Error Pop UP
     console.log('web3 is not found')
+    const installMetaMask = `<div class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+    container = document.querySelector('.container');
+    container.insertAdjacentHTML("beforeend", installMetaMask);
     // Create Error Message
   }
 })
+
 
 // Fetch User Address
 async function fetchAddress() {
