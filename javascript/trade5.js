@@ -105,6 +105,10 @@ async function trade() {
     // Change Swap Button for loader
     swapToLoader();
 
+    // Display Modal for a successful swap
+    document.querySelector('.modal-header').innerText = "Please confirm the Swap with your web3 client🤖";
+    $('.modal').modal('show');
+
 
 
     txReceipt = await web3.eth.sendTransaction({
@@ -119,6 +123,9 @@ async function trade() {
     // Change Loader for Swap Button
     loaderToSwap();
 
+
+  // ##############################################################
+
   // If User chooses to sell ERC20 TOken
   }else {
 
@@ -131,6 +138,12 @@ async function trade() {
 
     // Change Swap Button for loader
     swapToLoader();
+
+    // Display Modal for a successful swap
+    document.querySelector('.modal-header').innerText = "Please approve the Swap with your web3 client🤖";
+    document.querySelector('.modal-body').style.display = "none";
+    document.querySelector('#metamask-button').style.display = "none";
+    $('.modal').modal('show');
 
     successful = true;
 
@@ -159,6 +172,10 @@ async function trade() {
 
     console.log("transactionData2 CHECK");
 
+    // Alert modulat to ask for confirmation of approved transaction
+    document.querySelector('.modal-header').innerText = "Now confirm the approved Swap to exchange the tokens💱";
+    $('.modal').modal('show');
+
     txReceipt = await web3.eth.sendTransaction({
         from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
         to: kyberNetworkProxyAddress,
@@ -169,6 +186,7 @@ async function trade() {
         })
 
     console.log("txReceipt 2 CHECK");
+    console.log(txReceipt);
 
     // Change Loader for SWAP Button
     loaderToSwap();
@@ -176,7 +194,6 @@ async function trade() {
 
   // Display Modal for a successful swap
   document.querySelector('.modal-header').innerText = "Swap successful 👍";
-  document.querySelector('.modal-body').style.display = "none";
   document.querySelector('#metamask-button').style.display = "none";
   $('.modal').modal('show');
 }

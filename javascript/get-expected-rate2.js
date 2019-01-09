@@ -6,6 +6,7 @@ var kyberNetworkProxyAddress = "0x818e6fecd516ecc3849daf6845e3ec868087b755";
 
 kyberNetworkProxyContract = new web3.eth.Contract(kyberNetworkProxyABI, kyberNetworkProxyAddress)
 
+// Define token address to sell and token address to buy
 let src = addressToSell;
 let dest = addressToBuy;
 
@@ -61,7 +62,7 @@ async function getExpectedRate() {
   let result = await kyberNetworkProxyContract.methods.getExpectedRate(
       addressToSell,
       addressToBuy,
-      "1000000000000000000"
+      srcQuantity
       ).call()
 
   expectedRate = result.expectedRate

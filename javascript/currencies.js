@@ -14,6 +14,8 @@ let item;
 let srcSymbol = "ETH";
 let destSymbol = "KNC";
 
+// Set default source Token Decimal number to 10^18
+let srcQuantity = "1000000000000000000";
 
 // Fetch the selected Tokens addresses
 let addressToSell = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
@@ -28,7 +30,7 @@ let addressToBuy = "0x4e470dc7321e84ca96fcaedd0c8abcebbaeb68c6";
 function createHtmlTags() {
   currencyArray.forEach((currencyArray) => {
     // Input Currencies to buy
-    let currencyTag = `<a href="#"name="${currencyArray[0]}" id="${currencyArray[1]}" value="${currencyArray[2]}">${currencyArray[0]} - (${currencyArray[1]})</a>`
+    let currencyTag = `<a href="#"name="${currencyArray[0]}" data-decimal="${currencyArray[3]}" id="${currencyArray[1]}" value="${currencyArray[2]}">${currencyArray[0]} - (${currencyArray[1]})</a>`
     buyForm.insertAdjacentHTML("beforeend", currencyTag);
     sellForm.insertAdjacentHTML("beforeend", currencyTag);
   })
@@ -42,7 +44,6 @@ function fetchCurrencies() {
       data.data.forEach((currency) => {
         item = [currency.name, currency.symbol, currency.address, currency.decimals]
         currencyArray.push(item);
-        console.log("1");
       });
     })
     .then((result) => {
@@ -84,11 +85,17 @@ window.onclick = function(event) {
 
         // If the sell Dropdown is selected
         if (openDropdown.id == "sellDropdown") {
-          addressToSell = `${event.target.attributes[3].value}`;
+          console.log(event.target.attributes)
+          addressToSell = `${event.target.attributes[4].value}`;
 
-          // Refresh amounts
-          // srcAmountHTML.value = 0;
-          // destAmountHTML.value = 0;
+          // Get Source token decimal for GetExpectedRate function
+          srcDecimal = event.target.dataset.decimal;
+          console.log(srcDecimal);
+
+          // Calc srcQuantity with srcDecimal
+          srcQuantity = 10 ** srcDecimal
+          console.log(srcQuantity);
+
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()
 
@@ -108,7 +115,7 @@ window.onclick = function(event) {
           return addressToSell;
           // If the buy Dropdown is selected
         } else if (openDropdown.id == "buyDropdown") {
-          addressToBuy = `${event.target.attributes[3].value}`;
+          addressToBuy = `${event.target.attributes[4].value}`;
 
           // Refresh amounts
           // srcAmountHTML.value = 0;
