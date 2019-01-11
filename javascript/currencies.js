@@ -61,13 +61,9 @@ networkSwitch.addEventListener('click', reloadPage);
 function fetchApiFromSelectedNetwork() {
   // If selected Network is Mainnet
   if (selectedEthereumNetwork == "mainnet") {
-
-    url = "https://api.kyber.network/currencies";
     // Kyber Network ERC20 mainnet address
     addressToBuy = "0xdd974d5c2e2928dea5f71b9825b8b646686bd200";
   } else if (selectedEthereumNetwork = "ropsten" ) {
-
-    url = "https://ropsten-api.kyber.network/currencies";
     // Kyber Network ERC20 ropstem address
     addressToBuy = "0x4e470dc7321e84ca96fcaedd0c8abcebbaeb68c6";
   };
@@ -81,7 +77,7 @@ const buyForm = document.getElementById("buyDropdown");
 
 // Array to input individual token data from KyberAPI call
 const currencyArray = [];
-let item;
+let item1;
 
 // Mainet ERC20 addresses to fetch the images even if user selects ropsten
 const mainnetAddresses = {};
@@ -131,8 +127,10 @@ function createHtmlTags() {
 }
 
 // Fetch currencies from KyberAPI and store sorted in currencyArray Array. Then call createHtmlTags function
+
+
 function fetchCurrencies() {
-  fetch(url)
+  fetch("https://api.kyber.network/currencies")
     .then(response => response.json())
     .then((data) => {
       data.data.forEach((currency) => {
@@ -140,28 +138,29 @@ function fetchCurrencies() {
           item = [currency.name, currency.symbol, currency.address, currency.decimals]
           currencyArray.push(item);
         }
-        mainnetAddresses[currency.symbol] = currency.address
+        mainnetAddresses[currency.symbol] = currency.address;
       });
+      console.log(mainnetAddresses)
     })
     .then((result) => {
+      if (selectedEthereumNetwork == "ropsten") {
+        fetch("https://ropsten-api.kyber.network/currencies")
+          .then(response => response.json())
+          .then((data) => {
+            data.data.forEach((currency) => {
+              console.log("change in currency")
+              item = [currency.name, currency.symbol, currency.address, currency.decimals]
+              currencyArray.push(item);
+            });
+          })
+          .then((result) => {
+            currencyArray.sort();
+            createHtmlTags();
+        });
+      }
       currencyArray.sort();
       createHtmlTags();
   });
-  if (selectedEthereumNetwork == "ropsten") {
-    fetch("https://ropsten-api.kyber.network/currencies")
-      .then(response => response.json())
-      .then((data) => {
-        data.data.forEach((currency) => {
-          item = [currency.name, currency.symbol, currency.address, currency.decimals]
-          currencyArray.push(item);
-        });
-      })
-      .then((result) => {
-        currencyArray.sort();
-        createHtmlTags();
-    });
-  }
-
 }
 
 fetchCurrencies();
