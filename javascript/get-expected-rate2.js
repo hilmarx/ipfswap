@@ -58,6 +58,9 @@ function buyExchangeRate() {
 // Test whether users receive different expected Rates for different quantities
 
 async function getExpectedRate() {
+  console.log(addressToSell);
+  console.log(addressToBuy);
+  console.log(srcQuantity);
 
   let result = await kyberNetworkProxyContract.methods.getExpectedRate(
       addressToSell,

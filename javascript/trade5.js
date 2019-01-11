@@ -39,11 +39,34 @@ window.addEventListener('load', function() {
       console.log('MetaMask is not available')
     }
   } else {
-    // Change inner HTML of Error Pop UP
+    // Change inner HTML of Error message
     console.log('web3 is not found')
     console.log('Please install Metamask')
     $('.modal').modal('show');
     // Create Error Message
+  }
+})
+
+// Change modal to only show title and close button
+document.querySelector('.modal-body').style.display = "none";
+document.querySelector('#metamask-button').style.display = "none";
+
+// Check if client is on the right network and create alert if not
+web3.eth.net.getNetworkType()
+.then((result) => {
+  console.log(result)
+  console.log(selectedEthereumNetwork)
+  if (`${result}` == "main" && selectedEthereumNetwork == "ropsten") {
+    document.querySelector('.modal-header').innerText = "Please switch your web3 client to the Ropsten Testnet";
+    $('.modal').modal('show');
+  } else if (`${result}` == "ropsten" && selectedEthereumNetwork == "mainnet") {
+      document.querySelector('.modal-header').innerText = "Please switch your web3 client to the Mainnet";
+      $('.modal').modal('show');
+  } else if (`${result}` == "ropsten" && selectedEthereumNetwork == "ropsten") {return 0;
+  } else if (`${result}` == "main" && selectedEthereumNetwork == "mainnet") {return 0;
+  } else {
+      document.querySelector('.modal-header').innerText = "Please switch your web3 client to either Mainnet or Ropsten";
+      $('.modal').modal('show');
   }
 })
 
@@ -109,9 +132,6 @@ async function trade() {
 
     // Display Modal for a successful swap
     document.querySelector('.modal-header').innerText = "Please confirm the Swap with your web3 client🤖";
-    document.querySelector('.modal-body').style.display = "none";
-    document.querySelector('#metamask-button').style.display = "none";
-
     $('.modal').modal('show');
 
 
@@ -152,8 +172,6 @@ async function trade() {
 
     // Display Modal for a successful swap
     document.querySelector('.modal-header').innerText = "Please approve the Swap with your web3 client🤖";
-    document.querySelector('.modal-body').style.display = "none";
-    document.querySelector('#metamask-button').style.display = "none";
     $('.modal').modal('show');
 
     txReceipt = await web3.eth.sendTransaction({
