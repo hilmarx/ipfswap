@@ -259,7 +259,6 @@ window.onclick = function(event) {
 
           return addressToBuy;
         } else {
-          console.log("not working")
         }
       }
     }
@@ -296,25 +295,3 @@ function filterFunction(event) {
     }
   }
 }
-
-
-// LEGACY CODE
-
-// function fetchCurrencies() {
-//   fetch(url)
-//     .then(response => response.json())
-//     .then((data) => {
-//       data.data.forEach((currency) => {
-//         // Input Currencies to buy
-//                   //<a href="#">EOS</a>
-//         let buyItem =  `<a href="#"name="${currency.name}" id="${currency.symbol}" value="${currency.address}">${currency.name} - (${currency.symbol})</a>`
-//         // let buyItem = `<input type="radio" name="buyItem" id="buy-${currency.symbol}" value="${currency.symbol}">${currency.name} - ${currency.symbol}<br>`;
-//         buyForm.insertAdjacentHTML("beforeend", buyItem);
-
-//         // Input Currencies to sell
-//         let sellItem =  `<a href="#" name="${currency.name}" id="${currency.symbol}" value="${currency.address}">${currency.name} - (${currency.symbol})</a>`
-//         // let sellItem = `<input type="radio" name="sellItem" id="sell-${currency.symbol}" value="${currency.symbol}">${currency.name} - ${currency.symbol}<br>`;
-//         sellForm.insertAdjacentHTML("beforeend", sellItem);
-//       });
-//   });
-// }

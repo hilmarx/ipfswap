@@ -51,16 +51,12 @@ function sellExchangeRate() {
 function buyExchangeRate() {
   destAmount = event.srcElement.value;
   srcAmount = destAmount * (1 / (expectedRate / (10 ** 18)));
-  console.log(`expected rate ${expectedRate} destAmount ${destAmount} - srcAmount ${srcAmount}`)
   displaySrcAmount();
 }
 
 // Test whether users receive different expected Rates for different quantities
 
 async function getExpectedRate() {
-  console.log(addressToSell);
-  console.log(addressToBuy);
-  console.log(srcQuantity);
 
   let result = await kyberNetworkProxyContract.methods.getExpectedRate(
       addressToSell,

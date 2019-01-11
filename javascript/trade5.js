@@ -38,6 +38,9 @@ window.addEventListener('load', function() {
     } else {
       console.log('MetaMask is not available')
     }
+    // Change modal to only show title and close button
+    document.querySelector('.modal-body').style.display = "none";
+    document.querySelector('#metamask-button').style.display = "none";
   } else {
     // Change inner HTML of Error message
     console.log('web3 is not found')
@@ -47,15 +50,10 @@ window.addEventListener('load', function() {
   }
 })
 
-// Change modal to only show title and close button
-document.querySelector('.modal-body').style.display = "none";
-document.querySelector('#metamask-button').style.display = "none";
 
 // Check if client is on the right network and create alert if not
 web3.eth.net.getNetworkType()
 .then((result) => {
-  console.log(result)
-  console.log(selectedEthereumNetwork)
   if (`${result}` == "main" && selectedEthereumNetwork == "ropsten") {
     document.querySelector('.modal-header').innerText = "Please switch your web3 client to the Ropsten Testnet";
     $('.modal').modal('show');
@@ -125,8 +123,6 @@ async function trade() {
       "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
     ).encodeABI()
 
-    console.log("transactionData2 CHECK");
-
     // Change Swap Button for loader
     swapToLoader();
 
@@ -149,8 +145,6 @@ async function trade() {
 
     if (successful == false) return 0;
 
-    console.log("txReceipt 2 CHECK");
-
     // Change Loader for Swap Button
     loaderToSwap();
 
@@ -162,10 +156,8 @@ async function trade() {
 
     //First, user must approve KyberNetwork contract to trade src tokens
     srcTokenContract = new web3.eth.Contract(ERC20ABI, addressToSell);
-    console.log("srcTokenContract CHECK");
 
     transactionData = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
-    console.log("transcationData CHECK");
 
     // Change Swap Button for loader
     swapToLoader();
@@ -183,7 +175,6 @@ async function trade() {
           loaderToSwap();
           successful = false;
         })
-    console.log("txReceipt CHECK");
 
     if (successful == false) return 0;
 
@@ -212,8 +203,6 @@ async function trade() {
           loaderToSwap();
         })
 
-    console.log("txReceipt 2 CHECK");
-    console.log(txReceipt);
 
     // Change Loader for SWAP Button
     loaderToSwap();
