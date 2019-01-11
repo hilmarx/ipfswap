@@ -1,13 +1,43 @@
 // ##############Variable Declaration#####################
 
-// Fetching and displaying available ERC20s
-const url = "https://ropsten-api.kyber.network/currencies";
+// IF
+
+// ###Fetching and displaying available ERC20s###
+
+// Ropsten Network
+
+// By default, set network to mainet
+let selectedEthereumNetwork = "mainnet"
+
+let url;
+
+// By default, address to sell will be ETH (Same for ropsten and mainnet)
+let addressToSell = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+
+let addressToBuy;
+
+// If selected Network is Mainnet
+if (selectedEthereumNetwork == "mainnet") {
+
+  url = "https://api.kyber.network/currencies";
+  // Kyber Network ERC20 mainnet address
+  addressToBuy = "0xdd974d5c2e2928dea5f71b9825b8b646686bd200";
+} else if (selectedEthereumNetwork = "ropsten" ) {
+
+  url = "https://ropsten-api.kyber.network/currencies";
+  // Kyber Network ERC20 ropstem address
+  addressToBuy = "0x4e470dc7321e84ca96fcaedd0c8abcebbaeb68c6";
+};
 
 const sellForm = document.getElementById("sellDropdown");
 const buyForm = document.getElementById("buyDropdown");
 
+// Array to input individual token data from KyberAPI call
 const currencyArray = [];
 let item;
+
+// Mainet ERC20 addresses to fetch the images even if user selects ropsten
+const mainnetAddresses = {};
 
 // Assign currently selected src and dest token symbols
 
@@ -16,10 +46,6 @@ let destSymbol = "KNC";
 
 // Set default source Token Decimal number to 10^18
 let srcQuantity = "1000000000000000000";
-
-// Fetch the selected Tokens addresses
-let addressToSell = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-let addressToBuy = "0x4e470dc7321e84ca96fcaedd0c8abcebbaeb68c6";
 
 // ######################Functions#############################
 
@@ -44,6 +70,7 @@ function fetchCurrencies() {
       data.data.forEach((currency) => {
         item = [currency.name, currency.symbol, currency.address, currency.decimals]
         currencyArray.push(item);
+        mainnetAddresses[currency.symbol] = currency.address
       });
     })
     .then((result) => {
@@ -84,15 +111,19 @@ window.onclick = function(event) {
 
         // If the sell Dropdown is selected
         if (openDropdown.id == "sellDropdown") {
+
+
+          // Set new token address for getExpectedRate function
           addressToSell = `${event.target.attributes[4].value}`;
+
+          // Set token-logo for token to sell
+          document.getElementById('sell-logo').src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${addressToSell}.png`
 
           // Get Source token decimal for GetExpectedRate function
           srcDecimal = event.target.dataset.decimal;
-          console.log(srcDecimal);
 
           // Calc srcQuantity with srcDecimal
           srcQuantity = `${10 ** srcDecimal}`;
-          console.log(srcQuantity);
 
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()
@@ -113,12 +144,12 @@ window.onclick = function(event) {
           return addressToSell;
           // If the buy Dropdown is selected
         } else if (openDropdown.id == "buyDropdown") {
+
+          // Set token address which the user wants to buy
           addressToBuy = `${event.target.attributes[4].value}`;
 
-          // Refresh amounts
-          // srcAmountHTML.value = 0;
-          // destAmountHTML.value = 0;
-
+          // Set token-logo for token to sell
+          document.getElementById('buy-logo').src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${addressToBuy}.png`
 
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()

@@ -67,7 +67,6 @@ async function fetchAddress() {
 const USER_ACCOUNT_2 = fetchAddress();
 
 // Input own Address
-const VENDOR_WALLET_ADDRESS = "0x483C5100C3E544Aef546f72dF4022c8934a6945E"
 const PRODUCT_ETH_PRICE = '0.3'
 const PRODUCT_ETH_WEI_PRICE = utils.toWei('0.3');
 
