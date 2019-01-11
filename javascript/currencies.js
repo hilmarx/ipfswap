@@ -47,6 +47,27 @@ let destSymbol = "KNC";
 // Set default source Token Decimal number to 10^18
 let srcQuantity = "1000000000000000000";
 
+// Select the two token logos
+
+const sellLogo = document.getElementById('sell-logo');
+const buyLogo = document.getElementById('buy-logo');
+
+// Function to change the image to default no image available image if Trust Wallet Api returns 404
+
+function noImageSell() {
+  sellLogo.src = "images/no-image.png"
+}
+
+function noImageBuy() {
+  buyLogo.src = "images/no-image.png"
+}
+
+// Event listener to change image to no-image.png is nothing is fetched
+
+sellLogo.addEventListener("error", noImageSell)
+buyLogo.addEventListener("error", noImageBuy)
+
+
 // ######################Functions#############################
 
 // To display the Tokens in an alphabetical order, the fetchCurrencies function needs to only fetch the available names of the tokens wheras a seperate function createCurrencyList will create the necessary HTML Tags
@@ -112,12 +133,17 @@ window.onclick = function(event) {
         // If the sell Dropdown is selected
         if (openDropdown.id == "sellDropdown") {
 
+          // Set src Token Symbol
+          srcSymbol = event.target.attributes.id.value;
+
+          // Find token address of selected token from mainnetAddresses hash
+          let sellTokenImageUrl = mainnetAddresses[srcSymbol];
+
+          // Set token-logo for token to sell. If it is ETH, then use local image
+          (srcSymbol == "ETH") ? sellLogo.src = "images/ethereum.png" : sellLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${sellTokenImageUrl}.png`;
 
           // Set new token address for getExpectedRate function
           addressToSell = `${event.target.attributes[4].value}`;
-
-          // Set token-logo for token to sell
-          document.getElementById('sell-logo').src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${addressToSell}.png`
 
           // Get Source token decimal for GetExpectedRate function
           srcDecimal = event.target.dataset.decimal;
@@ -131,8 +157,6 @@ window.onclick = function(event) {
           // Refresh Expected rate
           // displayExchangeRate();
 
-          // Set src Token Symbol
-          srcSymbol = event.target.attributes.id.value;
 
           // Set Dropdown value to Token name & symbol
           document.getElementById("sell-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
@@ -145,20 +169,22 @@ window.onclick = function(event) {
           // If the buy Dropdown is selected
         } else if (openDropdown.id == "buyDropdown") {
 
+          // Set src Token Symbol
+          destSymbol = event.target.attributes.id.value;
+
+          // Find token address of selected token from mainnetAddresses hash
+          let buyTokenImageUrl = mainnetAddresses[destSymbol];
+
+          // Set token-logo for token to buy. If it is ETH, then use local image
+          (destSymbol == "ETH") ? buyLogo.src = "images/ethereum.png" : buyLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${buyTokenImageUrl}.png`;
+
           // Set token address which the user wants to buy
           addressToBuy = `${event.target.attributes[4].value}`;
 
-          // Set token-logo for token to sell
-          document.getElementById('buy-logo').src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${addressToBuy}.png`
 
           // Re-run getExpectedRate function for new address pair
           getExpectedRate()
 
-          // Set src Token Symbol
-          destSymbol = event.target.attributes.id.value;
-
-          // Refresh Expected rate
-          // displayExchangeRate();
 
           // Set Dropdown value to Token acronym
           document.getElementById("buy-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
