@@ -34,7 +34,9 @@ window.addEventListener('load', function() {
   if (typeof web3 !== 'undefined' && web3.currentProvider !== null) {
     console.log('web3 is enabled')
     if (web3.currentProvider.isMetaMask === true) {
+      // Open Metamask tab if not yet logged in and asks users if they trust the application or not
       console.log('MetaMask is active')
+      ethereum.enable();
     } else {
       console.log('MetaMask is not available')
     }
@@ -163,7 +165,7 @@ async function trade() {
     swapToLoader();
 
     // Display Modal for a successful swap
-    document.querySelector('.modal-header').innerText = "Please approve the Swap with your web3 client🤖";
+    document.querySelector('.modal-header').innerText = "Please approve the Swap with your web3 client and wait until the tx has been approved🤖";
     $('.modal').modal('show');
 
     txReceipt = await web3.eth.sendTransaction({

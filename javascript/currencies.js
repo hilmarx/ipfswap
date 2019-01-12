@@ -140,7 +140,6 @@ function fetchCurrencies() {
         }
         mainnetAddresses[currency.symbol] = currency.address;
       });
-      console.log(mainnetAddresses)
     })
     .then((result) => {
       if (selectedEthereumNetwork == "ropsten") {
@@ -148,7 +147,6 @@ function fetchCurrencies() {
           .then(response => response.json())
           .then((data) => {
             data.data.forEach((currency) => {
-              console.log("change in currency")
               item = [currency.name, currency.symbol, currency.address, currency.decimals]
               currencyArray.push(item);
             });
