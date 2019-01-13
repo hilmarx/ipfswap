@@ -34,7 +34,6 @@ function displayExchangeRate() {
 // Create HTML to display display expected destination amount
 
 function displayDestAmount() {
-  console.log(destAmount);
   destAmountHTML.value = destAmount;
 }
 
@@ -55,6 +54,8 @@ function updateDestValue() {
   destAmount = (srcAmount * (expectedRate / 10 ** 18));
   displayDestAmount();
 }
+
+// Triggered when a new buy token is selected and the src input requires an update based on the new expected exchange rate
 
 function updateSrcValue() {
   destAmount = document.getElementById('dest-amount').value

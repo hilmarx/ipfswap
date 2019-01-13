@@ -14,6 +14,13 @@ swapButtonDiv = document.querySelector('.swap-button-div');
 swapButton = document.querySelector('#swap-button');
 swapButtonHtml = `<input class="btn btn-outline-light" id="swap-button" type="submit" value="SWAP">`;
 
+const metaMaskBtn = document.querySelector('#metamask-button')
+const closeBtn = document.querySelector('#close-button')
+const modalTitle = document.querySelector('.modal-header')
+const modalBody = document.querySelector('.modal-body')
+
+
+// ############# Functions ###############
 
 // Change Swap to Loader and back
 
@@ -41,8 +48,8 @@ window.addEventListener('load', function() {
       console.log('MetaMask is not available')
     }
     // Change modal to only show title and close button
-    document.querySelector('.modal-body').style.display = "none";
-    document.querySelector('#metamask-button').style.display = "none";
+    modalBody.style.display = "none";
+    metaMaskBtn.style.display = "none";
   } else {
     // Change inner HTML of Error message
     console.log('web3 is not found')
@@ -57,23 +64,18 @@ window.addEventListener('load', function() {
 web3.eth.net.getNetworkType()
 .then((result) => {
   if (`${result}` == "main" && selectedEthereumNetwork == "ropsten") {
-    document.querySelector('.modal-header').innerText = "Please switch your web3 client to the Ropsten Testnet";
+    modalTitle.innerText = "Please switch your web3 client to the Ropsten Testnet";
     $('.modal').modal('show');
   } else if (`${result}` == "ropsten" && selectedEthereumNetwork == "mainnet") {
-      document.querySelector('.modal-header').innerText = "Please switch your web3 client to the Mainnet";
+      modalTitle.innerText = "Please switch your web3 client to the Mainnet";
       $('.modal').modal('show');
   } else if (`${result}` == "ropsten" && selectedEthereumNetwork == "ropsten") {return 0;
   } else if (`${result}` == "main" && selectedEthereumNetwork == "mainnet") {return 0;
   } else {
-      document.querySelector('.modal-header').innerText = "Please switch your web3 client to either Mainnet or Ropsten";
+      modalTitle.innerText = "Please switch your web3 client to either Mainnet or Ropsten";
       $('.modal').modal('show');
   }
 })
-
-
-// Swap successful mondel
-
-document.querySelector('.modal')
 
 
 // Fetch User Address
@@ -125,30 +127,56 @@ async function trade() {
       "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
     ).encodeABI()
 
-    // Change Swap Button for loader
-    swapToLoader();
+    // Add Event listener to "SWAP" button of Modal which when clicked open the transaction
 
     // Display Modal for a successful swap
-    document.querySelector('.modal-header').innerText = "Please confirm the Swap with your web3 client🤖";
+    modalTitle.innerText = "Please confirm the Swap🤖";
     $('.modal').modal('show');
+    closeBtn.innerText = "SWAP";
 
+    async function executeTx() {
 
+      txReceipt = await web3.eth.sendTransaction({
+          from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+          to: kyberNetworkProxyAddress,
+          data: transactionData,
+          value: srcAmountWei //ADDITIONAL FIELD HERE
+          })
+          // When the user clicks confirm in Metamask and the transcation hash is broadcasted
+          .on('transactionHash', function(hash){
+            // Change Swap Button for loader
+            swapToLoader();
+            // Change Modal to say please wait
+            modalTitle.innerText = "Please wait for the transaction to be mined";
+            modalBody.style.display = `To check out the tx status, visit Etherscan`;
+            closeBtn.style.display = "none"
+            metaMaskBtn.innerText = "Check on Etherscan"
+            metaMaskBtn.href = `https://ropsten.etherscan.io/tx/${hash}`
+            metaMaskBtn.style.display = "";
+            $('.modal').modal('show');
+          }).catch(function(error) {
+            console.log(error);
+            loaderToSwap();
+            successful = false;
+          })
 
-    txReceipt = await web3.eth.sendTransaction({
-        from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
-        to: kyberNetworkProxyAddress,
-        data: transactionData,
-        value: srcAmountWei //ADDITIONAL FIELD HERE
-        }).catch(function(error) {
-          console.log(error);
-          loaderToSwap();
-          successful = false;
-        })
+      if (successful == false) return 0;
 
-    if (successful == false) return 0;
+      // Change Loader for Swap Button
+      loaderToSwap();
 
-    // Change Loader for Swap Button
-    loaderToSwap();
+      // Display Modal for a successful swap
+      modalTitle.innerText = "Swap successful 👍";
+      // Re-display close button
+      closeBtn.style.display = ""
+      // remove event listener
+      closeBtn.removeEventListener("click", executeTx, { passive: true });
+      metaMaskBtn.style.display = "none";
+      $('.modal').modal('show');
+    }
+
+    closeBtn.addEventListener('click', executeTx);
+
 
 
   // ##############################################################
@@ -178,6 +206,8 @@ async function trade() {
           successful = false;
         })
 
+    console.log()
+
     if (successful == false) return 0;
 
     transactionData = kyberNetworkProxyContract.methods.trade(
@@ -189,8 +219,6 @@ async function trade() {
       slippageRate, //uint minConversionRate
       "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
     ).encodeABI()
-
-    console.log("transactionData2 CHECK");
 
     // Alert modulat to ask for confirmation of approved transaction
     document.querySelector('.modal-header').innerText = "Now confirm the approved Swap to exchange the tokens💱";
@@ -210,10 +238,6 @@ async function trade() {
     loaderToSwap();
   }
 
-  // Display Modal for a successful swap
-  document.querySelector('.modal-header').innerText = "Swap successful 👍";
-  document.querySelector('#metamask-button').style.display = "none";
-  $('.modal').modal('show');
 }
 
 const tradeButton = document.querySelector("#swap-button");

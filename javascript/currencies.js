@@ -193,8 +193,6 @@ window.onclick = function(event) {
 
         // If the sell Dropdown is selected
         if (openDropdown.id == "sellDropdown") {
-
-          console.log("I am in sell")
           // Set src Token Symbol
           srcSymbol = event.target.attributes.id.value;
 
@@ -218,9 +216,6 @@ window.onclick = function(event) {
           .then((response) => {
             updateSrcValue();
           })
-
-
-
 
           // Set Dropdown value to Token name & symbol
           document.getElementById("sell-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
