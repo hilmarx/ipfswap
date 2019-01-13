@@ -187,30 +187,14 @@ async function trade() {
     //First, user must approve KyberNetwork contract to trade src tokens
     srcTokenContract = new web3.eth.Contract(ERC20ABI, addressToSell);
 
-    transactionData = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
 
-    // Change Swap Button for loader
-    swapToLoader();
+    // ##### BATCHING EXPERIMENT ########################################
 
-    // Display Modal for a successful swap
-    document.querySelector('.modal-header').innerText = "Please approve the Swap with your web3 client and wait until the tx has been approved🤖";
-    $('.modal').modal('show');
+    // Approve
+    transactionData1 = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
 
-    txReceipt = await web3.eth.sendTransaction({
-        from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
-        to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
-        data: transactionData
-        }).catch(function(error) {
-          console.log(error);
-          loaderToSwap();
-          successful = false;
-        })
-
-    console.log()
-
-    if (successful == false) return 0;
-
-    transactionData = kyberNetworkProxyContract.methods.trade(
+    // Trade
+    transactionData2 = kyberNetworkProxyContract.methods.trade(
       addressToSell, //ERC20 srcToken
       srcAmountWei, //uint srcAmount
       addressToBuy, //ERC20 destToken
@@ -220,22 +204,113 @@ async function trade() {
       "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
     ).encodeABI()
 
-    // Alert modulat to ask for confirmation of approved transaction
-    document.querySelector('.modal-header').innerText = "Now confirm the approved Swap to exchange the tokens💱";
-    $('.modal').modal('show');
-
-    txReceipt = await web3.eth.sendTransaction({
-        from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
-        to: kyberNetworkProxyAddress,
-        data: transactionData,
-        }).catch(function(error) {
-          console.log(error);
-          loaderToSwap();
-        })
+    // Create first batch
+    const batch = new web3.eth.BatchRequest()
 
 
-    // Change Loader for SWAP Button
-    loaderToSwap();
+
+    // Add second tx to back
+    batch.add(web3.eth.sendTransaction.request({
+              from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+              to: kyberNetworkProxyAddress,
+              data: transactionData2,
+              },function(error) {
+            console.log(error);
+            })
+    )
+
+
+    // Add first tx to batch
+    batch.add(web3.eth.sendTransaction.request({
+          from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+          to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
+          data: transactionData1
+          }, function(error) {
+            console.log(error);
+          })
+    )
+
+    batch.execute();
+
+
+    // // ####### BATCHING EXPERIMENT OVER #######################
+
+
+
+    // transactionData = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
+
+    // // Display Modal for a successful swap
+    // modalTitle.innerText = "Please grant IPFSWAP permission to swap your tokens🤖";
+    // closeBtn.innerText = "Approve"
+    // $('.modal').modal('show');
+
+    // async function approveTx() {
+
+    //   txReceipt = await web3.eth.sendTransaction({
+    //       from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+    //       to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
+    //       data: transactionData
+    //       })
+    //       .on('transactionHash', function(hash) {
+    //         // ####### Start second tx ########
+    //         // Change Swap Button for loader
+    //         swapToLoader();
+
+    //         // Call the trade method in Proxy Contract
+    //         transactionData = kyberNetworkProxyContract.methods.trade(
+    //           addressToSell, //ERC20 srcToken
+    //           srcAmountWei, //uint srcAmount
+    //           addressToBuy, //ERC20 destToken
+    //           fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
+    //           "10000000000000000000000000000000", //uint maxDestAmount
+    //           slippageRate, //uint minConversionRate
+    //           "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
+    //         ).encodeABI()
+
+    //         // Alert modal to ask for confirmation of approved transaction
+    //         document.querySelector('.modal-header').innerText = "Now confirm the approved Swap to exchange the tokens💱";
+    //         $('.modal').modal('show');
+
+    //         async function exectuteTrade() {
+
+    //         txReceipt = await web3.eth.sendTransaction({
+    //           from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+    //           to: kyberNetworkProxyAddress,
+    //           data: transactionData,
+    //           }).on('transactionHash', function(hash){
+    //             // Change Swap Button for loader
+    //             swapToLoader();
+    //             // Change Modal to say please wait
+    //             modalTitle.innerText = "Please wait for the transaction to be mined";
+    //             modalBody.style.display = `To check out the tx status, visit Etherscan`;
+    //             closeBtn.style.display = "none"
+    //             metaMaskBtn.innerText = "Check on Etherscan"
+    //             metaMaskBtn.href = `https://ropsten.etherscan.io/tx/${hash}`
+    //             metaMaskBtn.style.display = "";
+    //             $('.modal').modal('show');
+    //           })
+    //           .catch(function(error) {
+    //             console.log(error);
+    //             loaderToSwap();
+    //         })
+    //           // Async Ende
+    //         }
+    //         // Remove first event listener
+    //         closeBtn.removeEventListener("click", approveTx, { passive: true });
+    //         // Add event Listener to function
+    //         closeBtn.addEventListener('click', executeTrade)
+    //       })
+    //       .catch(function(error) {
+    //         console.log(error);
+    //         loaderToSwap();
+    //         successful = false;
+    //       })
+    //   if (successful == false) return 0;
+
+    // }
+
+    // closeBtn.addEventListener('click', approveTx)
+
   }
 
 }
@@ -248,3 +323,35 @@ tradeButton.addEventListener('click', function(event) {
 });
 
 // main();
+
+// OLD CODE FROM ELSE PART
+
+
+    // closeBtn.addEventListener('click', approveTx);
+
+    // transactionData = kyberNetworkProxyContract.methods.trade(
+    //   addressToSell, //ERC20 srcToken
+    //   srcAmountWei, //uint srcAmount
+    //   addressToBuy, //ERC20 destToken
+    //   fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
+    //   "10000000000000000000000000000000", //uint maxDestAmount
+    //   slippageRate, //uint minConversionRate
+    //   "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
+    // ).encodeABI()
+
+    // // Alert modulat to ask for confirmation of approved transaction
+    // document.querySelector('.modal-header').innerText = "Now confirm the approved Swap to exchange the tokens💱";
+    // $('.modal').modal('show');
+
+    // txReceipt = await web3.eth.sendTransaction({
+    //     from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+    //     to: kyberNetworkProxyAddress,
+    //     data: transactionData,
+    //     }).catch(function(error) {
+    //       console.log(error);
+    //       loaderToSwap();
+    //     })
+
+
+    // Change Loader for SWAP Button
+    // loaderToSwap();
