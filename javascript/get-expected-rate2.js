@@ -34,6 +34,7 @@ function displayExchangeRate() {
 // Create HTML to display display expected destination amount
 
 function displayDestAmount() {
+  console.log(destAmount);
   destAmountHTML.value = destAmount;
 }
 
@@ -46,6 +47,19 @@ function sellExchangeRate() {
   srcAmount = event.srcElement.value;
   destAmount = (srcAmount * (expectedRate / 10 ** 18));
   displayDestAmount();
+}
+
+// Triggered when a new buy token is selected and the dest input requires an update based on the new expected exchange rate
+function updateDestValue() {
+  srcAmount = document.getElementById('src-amount').value
+  destAmount = (srcAmount * (expectedRate / 10 ** 18));
+  displayDestAmount();
+}
+
+function updateSrcValue() {
+  destAmount = document.getElementById('dest-amount').value
+  srcAmount = destAmount * (1 / (expectedRate / (10 ** 18)));
+  displaySrcAmount();
 }
 
 function buyExchangeRate() {
@@ -66,6 +80,7 @@ async function getExpectedRate() {
 
   expectedRate = result.expectedRate
   slippageRate = result.slippageRate
+  // Display Exchange Rate
   displayExchangeRate();
 }
 

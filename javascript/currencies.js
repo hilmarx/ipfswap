@@ -194,6 +194,7 @@ window.onclick = function(event) {
         // If the sell Dropdown is selected
         if (openDropdown.id == "sellDropdown") {
 
+          console.log("I am in sell")
           // Set src Token Symbol
           srcSymbol = event.target.attributes.id.value;
 
@@ -212,11 +213,13 @@ window.onclick = function(event) {
           // Calc srcQuantity with srcDecimal
           srcQuantity = `${10 ** srcDecimal}`;
 
-          // Re-run getExpectedRate function for new address pair
+          // Re-run getExpectedRate function for new address pair & wait for the promise to resolve. Then update the numbers in the src field
           getExpectedRate()
+          .then((response) => {
+            updateSrcValue();
+          })
 
-          // Refresh Expected rate
-          // displayExchangeRate();
+
 
 
           // Set Dropdown value to Token name & symbol
@@ -243,9 +246,14 @@ window.onclick = function(event) {
           addressToBuy = `${event.target.attributes[4].value}`;
 
 
-          // Re-run getExpectedRate function for new address pair
+          // Re-run getExpectedRate function for new address pair & wait for the promise to resolve. Then update the numbers in the dest field
           getExpectedRate()
+          .then((response) => {
+            updateDestValue();
+          })
 
+          // Refresh dest-amount value
+          // sellExchangeRate()
 
           // Set Dropdown value to Token acronym
           document.getElementById("buy-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
