@@ -150,8 +150,9 @@ async function trade() {
             modalTitle.innerText = "Please wait for the transaction to be mined";
             modalBody.style.display = `While you wait, go check out the tx status on Etherscan`;
             closeBtn.style.display = "none"
-            metaMaskBtn.innerText = "Check on Etherscan"
-            metaMaskBtn.href = `https://ropsten.etherscan.io/tx/${hash}`
+            metaMaskBtn.innerText = "Check on Etherscan";
+            const etherscanUrl = (selectedEthereumNetwork == "mainnet") ? `https://etherscan.io/tx/${hash}` : `https://ropsten.etherscan.io/tx/${hash}`;
+            metaMaskBtn.href = etherscanUrl
             metaMaskBtn.style.display = "";
             $('.modal').modal('show');
           }).catch(function(error) {
@@ -245,7 +246,8 @@ async function trade() {
                 modalBody.style.display = "";
                 closeBtn.style.display = "none";
                 metaMaskBtn.innerText = "Check Tx Status";
-                metaMaskBtn.href = `https://ropsten.etherscan.io/tx/${hash}`
+                (selectedEthereumNetwork == "mainnet") ? etherscanUrl = `https://etherscan.io/tx/${hash}` : etherscanUrl = `https://ropsten.etherscan.io/tx/${hash}`
+                metaMaskBtn.href = etherscanUrl
                 metaMaskBtn.style.display = "";
                 $('.modal').modal('show');
               })
