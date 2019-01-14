@@ -148,7 +148,7 @@ async function trade() {
             swapToLoader();
             // Change Modal to say please wait
             modalTitle.innerText = "Please wait for the transaction to be mined";
-            modalBody.style.display = `To check out the tx status, visit Etherscan`;
+            modalBody.style.display = `While you wait, go check out the tx status on Etherscan`;
             closeBtn.style.display = "none"
             metaMaskBtn.innerText = "Check on Etherscan"
             metaMaskBtn.href = `https://ropsten.etherscan.io/tx/${hash}`
@@ -157,6 +157,8 @@ async function trade() {
           }).catch(function(error) {
             console.log(error);
             loaderToSwap();
+            // Reload page to avoid having multiple tx queued up
+            location.reload();
             successful = false;
           })
 
@@ -184,16 +186,18 @@ async function trade() {
   // If User chooses to sell ERC20 TOken
   }else {
 
+    // Function to be called after the final event has been triggered
+    function reloadMainPage() {
+      location.reload();
+    }
+
     //First, user must approve KyberNetwork contract to trade src tokens
     srcTokenContract = new web3.eth.Contract(ERC20ABI, addressToSell);
 
-
-    // ##### BATCHING EXPERIMENT ########################################
-
-    // Approve
     transactionData1 = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
 
-    // Trade
+    // ####### Start second tx ########
+    // Call the trade method in Proxy Contract
     transactionData2 = kyberNetworkProxyContract.methods.trade(
       addressToSell, //ERC20 srcToken
       srcAmountWei, //uint srcAmount
@@ -204,115 +208,89 @@ async function trade() {
       "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
     ).encodeABI()
 
-    // Create first batch
-    const batch = new web3.eth.BatchRequest()
+    // Display Modal for a successful swap
+    modalTitle.innerText = "Please approve the Swap🤖";
+    modalBody.innerText = `You are about to trade ${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}.` ;
+    modalBody.style.display = "";
+    closeBtn.innerText = "Approve"
+    $('.modal').modal('show');
 
+    async function approveTx() {
 
-
-    // Add second tx to back
-    batch.add(web3.eth.sendTransaction.request({
-              from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
-              to: kyberNetworkProxyAddress,
-              data: transactionData2,
-              },function(error) {
-            console.log(error);
-            })
-    )
-
-
-    // Add first tx to batch
-    batch.add(web3.eth.sendTransaction.request({
+      txReceipt = await web3.eth.sendTransaction({
           from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
           to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
           data: transactionData1
-          }, function(error) {
-            console.log(error);
           })
-    )
+          .on('transactionHash', function(hash) {
 
-    batch.execute();
+            // Alert modal to ask for confirmation of approved transaction
+            modalTitle.innerText = "Now confirm the approved Swap to exchange the tokens💱";
+            closeBtn.innerText = "Confirm"
+            modalBody.style.display = "none"
+            $('.modal').modal('show');
 
+            async function executeTrade() {
 
-    // // ####### BATCHING EXPERIMENT OVER #######################
+            txReceipt = await web3.eth.sendTransaction({
+              from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+              to: kyberNetworkProxyAddress,
+              data: transactionData2,
+              }).on('transactionHash', function(hash){
+                // Change Swap Button for loader
+                swapToLoader();
+                // Change Modal to say please wait
+                modalTitle.innerText = "Please wait for the transaction to be mined";
+                modalBody.innerText = `Meanwhile, you can check the tx status on Etherscan`;
+                modalBody.style.display = "";
+                closeBtn.style.display = "none";
+                metaMaskBtn.innerText = "Check Tx Status";
+                metaMaskBtn.href = `https://ropsten.etherscan.io/tx/${hash}`
+                metaMaskBtn.style.display = "";
+                $('.modal').modal('show');
+              })
+              .catch(function(error) {
+                console.log(error);
+                loaderToSwap();
+            });
 
+            // Change Loader for Swap Button
+            loaderToSwap();
 
+            // Display Modal for a successful swap
+            modalTitle.innerText = "Swap successful 👍";
+            modalBody.innerText = "";
+            modalBody.style.display = "none"
+            // Re-display close button
+            closeBtn.innerText = "New Swap"
+            closeBtn.style.display = ""
+            closeBtn.removeEventListener("click", executeTrade, { passive: true });
+            closeBtn.addEventListener("click", reloadMainPage);
+            metaMaskBtn.style.display = "none";
+            $('.modal').modal('show');
 
-    // transactionData = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
+              // Async Ende
+            }
+            // Remove first event listener
+            closeBtn.removeEventListener("click", approveTx, { passive: true });
+            // Add event Listener to function
+            closeBtn.addEventListener('click', executeTrade)
+          })
+          .catch(function(error) {
+            console.log(error);
+            loaderToSwap();
+            successful = false;
+          })
+      if (successful == false) return 0;
 
-    // // Display Modal for a successful swap
-    // modalTitle.innerText = "Please grant IPFSWAP permission to swap your tokens🤖";
-    // closeBtn.innerText = "Approve"
-    // $('.modal').modal('show');
+    // approveTx() end
+    }
+    closeBtn.addEventListener('click', approveTx)
 
-    // async function approveTx() {
-
-    //   txReceipt = await web3.eth.sendTransaction({
-    //       from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
-    //       to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
-    //       data: transactionData
-    //       })
-    //       .on('transactionHash', function(hash) {
-    //         // ####### Start second tx ########
-    //         // Change Swap Button for loader
-    //         swapToLoader();
-
-    //         // Call the trade method in Proxy Contract
-    //         transactionData = kyberNetworkProxyContract.methods.trade(
-    //           addressToSell, //ERC20 srcToken
-    //           srcAmountWei, //uint srcAmount
-    //           addressToBuy, //ERC20 destToken
-    //           fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
-    //           "10000000000000000000000000000000", //uint maxDestAmount
-    //           slippageRate, //uint minConversionRate
-    //           "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
-    //         ).encodeABI()
-
-    //         // Alert modal to ask for confirmation of approved transaction
-    //         document.querySelector('.modal-header').innerText = "Now confirm the approved Swap to exchange the tokens💱";
-    //         $('.modal').modal('show');
-
-    //         async function exectuteTrade() {
-
-    //         txReceipt = await web3.eth.sendTransaction({
-    //           from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
-    //           to: kyberNetworkProxyAddress,
-    //           data: transactionData,
-    //           }).on('transactionHash', function(hash){
-    //             // Change Swap Button for loader
-    //             swapToLoader();
-    //             // Change Modal to say please wait
-    //             modalTitle.innerText = "Please wait for the transaction to be mined";
-    //             modalBody.style.display = `To check out the tx status, visit Etherscan`;
-    //             closeBtn.style.display = "none"
-    //             metaMaskBtn.innerText = "Check on Etherscan"
-    //             metaMaskBtn.href = `https://ropsten.etherscan.io/tx/${hash}`
-    //             metaMaskBtn.style.display = "";
-    //             $('.modal').modal('show');
-    //           })
-    //           .catch(function(error) {
-    //             console.log(error);
-    //             loaderToSwap();
-    //         })
-    //           // Async Ende
-    //         }
-    //         // Remove first event listener
-    //         closeBtn.removeEventListener("click", approveTx, { passive: true });
-    //         // Add event Listener to function
-    //         closeBtn.addEventListener('click', executeTrade)
-    //       })
-    //       .catch(function(error) {
-    //         console.log(error);
-    //         loaderToSwap();
-    //         successful = false;
-    //       })
-    //   if (successful == false) return 0;
-
-    // }
-
-    // closeBtn.addEventListener('click', approveTx)
-
+  // Else end
   }
 
+// trade() end
 }
 
 const tradeButton = document.querySelector("#swap-button");
@@ -321,6 +299,81 @@ tradeButton.addEventListener('click', function(event) {
   event.preventDefault();
   trade();
 });
+
+
+
+// ##### BATCHING EXPERIMENT ########################################
+
+    // // Approve
+    // transactionData1 = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
+
+    // // Trade
+    // transactionData2 = kyberNetworkProxyContract.methods.trade(
+    //   addressToSell, //ERC20 srcToken
+    //   srcAmountWei, //uint srcAmount
+    //   addressToBuy, //ERC20 destToken
+    //   fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
+    //   "10000000000000000000000000000000", //uint maxDestAmount
+    //   slippageRate, //uint minConversionRate
+    //   "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
+    // ).encodeABI()
+
+    // // Create first batch
+    // const batch = new web3.eth.BatchRequest()
+
+    // // Display Modal for a successful swap
+    // modalTitle.innerText = "Please grant IPFSWAP permission to swap"
+    // modalBody.innerText = `${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}🤖` ;
+    // modalBody.style.display = "";
+    // closeBtn.innerText = "Approve"
+    // $('.modal').modal('show');
+
+    // // Add trade tx to back
+    // batch.add(web3.eth.sendTransaction.request({
+    //           from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+    //           to: kyberNetworkProxyAddress,
+    //           data: transactionData2,
+    //           },function(error) {
+    //         console.log(error);
+    //         })
+
+    // )
+
+
+    // // Add authorize tx to batch
+    // batch.add(web3.eth.sendTransaction.request({
+    //       from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+    //       to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
+    //       data: transactionData1
+    //       }, function(error) {
+    //         console.log(error);
+    //       })
+    // )
+
+    // function executeBatch() {
+    //   batch.execute()
+    //   // Change Swap Button for loader
+    //   swapToLoader();
+    //   // Change Modal to say please wait
+    //   modalTitle.innerText = "Please wait for the transactions to be mined";
+    //   modalBody.style.display = `To check out the tx status, visit Etherscan`;
+    //   closeBtn.style.display = "none"
+    //   modalBody.style.display = "none"
+    //   metaMaskBtn.innerText = "Check on Etherscan"
+    //   metaMaskBtn.href = `https://ropsten.etherscan.io/tx/${hash}`
+    //   metaMaskBtn.style.display = "";
+    //   $('.modal').modal('show');
+    // }
+
+    // closeBtn.addEventListener('click', executeBatch)
+
+    // // ####### BATCHING EXPERIMENT OVER #######################
+
+
+
+
+
+//  #################################################################
 
 // main();
 
