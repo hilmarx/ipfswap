@@ -87,6 +87,11 @@ const mainnetAddresses = {};
 let srcSymbol = "ETH";
 let destSymbol = "KNC";
 
+// Assign currently selected src and dest names
+
+let srcName = "Ethereum";
+let destName = "KyberNetwork"
+
 // Set default source Token Decimal number to 10^18
 let srcQuantity = "1000000000000000000";
 
@@ -180,19 +185,85 @@ function BuyFunction() {
 
 // Close the dropdown menu if User selects a token from dropdown
 window.onclick = function(event) {
+  // ############# SWAP TOKEN Information ###################
+  if (event.target.className == "swap-image") {
+    console.log("I am in")
+
+    // Set src Token Symbol
+    let swappedSrcSymbol = destSymbol
+    let swappedDestSymbol = srcSymbol
+    destSymbol = swappedDestSymbol;
+    srcSymbol = swappedSrcSymbol;
+    console.log(`Dest Symbol: ${destSymbol}`)
+    console.log(`Src Symbol: ${srcSymbol}`)
+
+    // Find token address of selected token from mainnetAddresses hash
+    let sellTokenImageUrl = mainnetAddresses[srcSymbol];
+    // Find token address of selected token from mainnetAddresses hash
+    let buyTokenImageUrl = mainnetAddresses[destSymbol];
+    // Find token address of selected token from mainnetAddresses hash
+
+    console.log(`sellTokenImageUrl: ${sellTokenImageUrl}`);
+
+    // Set token-logo for token to buy. If it is ETH, then use local image
+    (destSymbol == "ETH") ? buyLogo.src = "images/ethereum.png" : buyLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${buyTokenImageUrl}.png`;
+    // Set token-logo for token to sell. If it is ETH, then use local image
+    (srcSymbol == "ETH") ? sellLogo.src = "images/ethereum.png" : sellLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${sellTokenImageUrl}.png`;
+
+    // Set token address which the user wants to buy
+    let swappedAddressToBuy = addressToSell;
+    let swappedAddressToSell = addressToBuy;
+    addressToSell = swappedAddressToSell;
+    addressToBuy = swappedAddressToBuy;
+
+    // Re-run getExpectedRate function for new address pair & wait for the promise to resolve. Then update the numbers in the dest field
+    getExpectedRate()
+    .then((response) => {
+      updateDestValue();
+    })
+
+    swappedDestName = srcName
+    swappedSrcName = destName
+    srcName = swappedSrcName;
+    destName = swappedDestName;
+
+    // Set Dropdown value to Token acronym
+    document.getElementById("buy-button").innerText = `${destName} - (${destSymbol})`;
+
+    // Set Dropdown value to Token acronym
+    document.getElementById("sell-button").innerText = `${srcName} - (${srcSymbol})`;
+
+    // Set buy-symbol to destSymbol
+    document.getElementById('buy-symbol').innerText = destSymbol
+
+    // Set sell-symbol Symbol to srcSy,bol
+    document.getElementById('sell-symbol').innerText = srcSymbol
+
+
+    // Set sell-symbol Symbol to srcSybol
+    document.getElementById('sell-symbol').innerText = srcSymbol
+
+  }
+
+  // ############# TOKEN SELECTION ###################
+
   // If User clicks on Search bar, do not close the window
   if (event.target.id == "sellSearch" || event.target.id == "buySearch") return 0;
+  console.log("1")
   // Check condition if User pressed anything else than the image or the title of the token
   if (event.target.parentElement.id != "sell-content" && event.target.parentElement.id != "buy-content"){
+    console.log("2")
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
     for (i = 0; i < dropdowns.length; i++) {
       var openDropdown = dropdowns[i];
       if (openDropdown.classList.contains('show')) {
         openDropdown.classList.remove('show');
+        console.log("3")
 
         // If the sell Dropdown is selected
         if (openDropdown.id == "sellDropdown") {
+          console.log("now")
           // Set src Token Symbol
           srcSymbol = event.target.attributes.id.value;
 
@@ -217,8 +288,9 @@ window.onclick = function(event) {
             updateSrcValue();
           })
 
+          srcName = event.target.attributes.name.value
           // Set Dropdown value to Token name & symbol
-          document.getElementById("sell-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
+          document.getElementById("sell-button").innerText = `${srcName} - (${srcSymbol})`;
 
           // Set sell-symbol Symbol to srcSybol
           document.getElementById('sell-symbol').innerText = srcSymbol
@@ -247,18 +319,17 @@ window.onclick = function(event) {
             updateDestValue();
           })
 
-          // Refresh dest-amount value
-          // sellExchangeRate()
+          destName = event.target.attributes.name.value
 
           // Set Dropdown value to Token acronym
-          document.getElementById("buy-button").innerText = `${event.target.attributes.name.value} - (${event.target.attributes.id.value})`;
+          document.getElementById("buy-button").innerText = `${destName} - (${destSymbol})`;
 
           // Set buy-symbol to srcSybol
           document.getElementById('buy-symbol').innerText = destSymbol
 
-
           return addressToBuy;
-        } else {
+
+          } else {
         }
       }
     }

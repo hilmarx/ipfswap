@@ -133,7 +133,7 @@ async function trade() {
       // Add Event listener to "SWAP" button of Modal which when clicked open the transaction
 
       // Display Modal for a successful swap
-      modalTitle.innerText = "Please confirm the Swap🤖";
+      modalTitle.innerText = "Please confirm the Swap 🤖";
       modalBody.innerText = `You are about to trade ${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}.` ;
       modalBody.style.display = "";
       $('.modal').modal('show');
@@ -239,7 +239,7 @@ async function trade() {
       ).encodeABI()
 
       // Display Modal for a successful swap
-      modalTitle.innerText = "Please approve the Swap🤖";
+      modalTitle.innerText = "Please approve the Swap 🤖";
       modalBody.innerText = `You are about to trade ${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}.` ;
       modalBody.style.display = "";
       closeBtn.innerText = "Approve"
@@ -255,7 +255,7 @@ async function trade() {
             .on('transactionHash', function(hash) {
 
               // Alert modal to ask for confirmation of approved transaction
-              modalTitle.innerText = "Now confirm the approved Swap to exchange the tokens💱";
+              modalTitle.innerText = "Now confirm the approved Swap to exchange the tokens";
               closeBtn.innerText = "Confirm"
               modalBody.style.display = "none"
               $('.modal').modal('show');
