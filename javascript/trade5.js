@@ -22,6 +22,12 @@ const modalBody = document.querySelector('.modal-body')
 
 // ############# Functions ###############
 
+// Function to be called after the final event has been triggered
+function reloadMainPage() {
+  location.reload();
+};
+
+
 // Change Swap to Loader and back
 
 // Change Swap button to Loader
@@ -103,6 +109,8 @@ let successful;
 
 async function trade() {
 
+
+
   srcAmountWei = `${srcAmount * (10 ** 18)}`;
 
   // Set successful to true
@@ -117,26 +125,34 @@ async function trade() {
   // If User chooses to sell ETH
   if(addressToSell == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
 
-    transactionData = kyberNetworkProxyContract.methods.trade(
-      addressToSell, //ETH srcToken
-      srcAmountWei, //uint srcAmount
-      addressToBuy, //ERC20 destToken
-      fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
-      "10000000000000000000000000000000", //uint maxDestAmount
-      slippageRate, //uint minConversionRate
-      "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
-    ).encodeABI()
+    // Call balanceOf function
+    let etherBalance = await web3.eth.getBalance(fetchedUserAddress)
 
-    // Add Event listener to "SWAP" button of Modal which when clicked open the transaction
+    if (etherBalance >= parseInt(srcAmountWei) ) {
 
-    // Display Modal for a successful swap
-    modalTitle.innerText = "Please confirm the Swap🤖";
-    $('.modal').modal('show');
-    closeBtn.innerText = "SWAP";
+      // Add Event listener to "SWAP" button of Modal which when clicked open the transaction
 
-    async function executeTx() {
+      // Display Modal for a successful swap
+      modalTitle.innerText = "Please confirm the Swap🤖";
+      modalBody.innerText = `You are about to trade ${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}.` ;
+      modalBody.style.display = "";
+      $('.modal').modal('show');
+      closeBtn.innerText = "Confirm";
 
-      txReceipt = await web3.eth.sendTransaction({
+
+      async function executeTx() {
+
+        transactionData = kyberNetworkProxyContract.methods.trade(
+          addressToSell, //ETH srcToken
+          srcAmountWei, //uint srcAmount
+          addressToBuy, //ERC20 destToken
+          fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
+          "10000000000000000000000000000000", //uint maxDestAmount
+          slippageRate, //uint minConversionRate
+          "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
+        ).encodeABI()
+
+        txReceipt = await web3.eth.sendTransaction({
           from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
           to: kyberNetworkProxyAddress,
           data: transactionData,
@@ -147,38 +163,49 @@ async function trade() {
             // Change Swap Button for loader
             swapToLoader();
             // Change Modal to say please wait
-            modalTitle.innerText = "Please wait for the transaction to be mined";
-            modalBody.style.display = `While you wait, go check out the tx status on Etherscan`;
+            modalTitle.innerText = "Please wait for the transaction to be mined 🕒";
+            modalBody.innerText = `While you wait, go check out the tx status on Etherscan`;
             closeBtn.style.display = "none"
             metaMaskBtn.innerText = "Check on Etherscan";
             const etherscanUrl = (selectedEthereumNetwork == "mainnet") ? `https://etherscan.io/tx/${hash}` : `https://ropsten.etherscan.io/tx/${hash}`;
             metaMaskBtn.href = etherscanUrl
             metaMaskBtn.style.display = "";
             $('.modal').modal('show');
-          }).catch(function(error) {
-            console.log(error);
-            loaderToSwap();
-            // Reload page to avoid having multiple tx queued up
-            location.reload();
-            successful = false;
+            })
+          .catch(function(error) {
+              console.log(error);
+              loaderToSwap();
+              // Reload page to avoid having multiple tx queued up
+              location.reload();
+              successful = false;
           })
 
-      if (successful == false) return 0;
+        if (successful == false) return 0;
 
-      // Change Loader for Swap Button
-      loaderToSwap();
+        // Change Loader for Swap Button
+        loaderToSwap();
 
-      // Display Modal for a successful swap
-      modalTitle.innerText = "Swap successful 👍";
-      // Re-display close button
-      closeBtn.style.display = ""
-      // remove event listener
-      closeBtn.removeEventListener("click", executeTx, { passive: true });
-      metaMaskBtn.style.display = "none";
+        // Display Modal for a successful swap
+        modalTitle.innerText = "Swap successful 👍";
+        modalBody.style.display = "none"
+        closeBtn.innerText = "New Swap";
+        // Re-display close button
+        closeBtn.style.display = ""
+        // remove event listener
+        closeBtn.removeEventListener("click", executeTx, { passive: true });
+        closeBtn.addEventListener("click", reloadMainPage);
+        metaMaskBtn.style.display = "none";
+        $('.modal').modal('show');
+      }
+
+      closeBtn.addEventListener('click', executeTx);
+
+    } else {
+      modalTitle.innerText = "Insufficient Token Balance"
+      closeBtn.innerText = "Close"
       $('.modal').modal('show');
     }
 
-    closeBtn.addEventListener('click', executeTx);
 
 
 
@@ -187,108 +214,116 @@ async function trade() {
   // If User chooses to sell ERC20 TOken
   }else {
 
-    // Function to be called after the final event has been triggered
-    function reloadMainPage() {
-      location.reload();
-    }
-
     //First, user must approve KyberNetwork contract to trade src tokens
     srcTokenContract = new web3.eth.Contract(ERC20ABI, addressToSell);
 
-    transactionData1 = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
+    // Call balanceOf function
+    let erc20Balance = await srcTokenContract.methods.balanceOf(fetchedUserAddress).call();
+    console.log(erc20Balance)
+    console.log(srcAmountWei)
 
-    // ####### Start second tx ########
-    // Call the trade method in Proxy Contract
-    transactionData2 = kyberNetworkProxyContract.methods.trade(
-      addressToSell, //ERC20 srcToken
-      srcAmountWei, //uint srcAmount
-      addressToBuy, //ERC20 destToken
-      fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
-      "10000000000000000000000000000000", //uint maxDestAmount
-      slippageRate, //uint minConversionRate
-      "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
-    ).encodeABI()
+    if (erc20Balance >= parseInt(srcAmountWei) ) {
 
-    // Display Modal for a successful swap
-    modalTitle.innerText = "Please approve the Swap🤖";
-    modalBody.innerText = `You are about to trade ${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}.` ;
-    modalBody.style.display = "";
-    closeBtn.innerText = "Approve"
-    $('.modal').modal('show');
+      transactionData1 = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
 
-    async function approveTx() {
+      // ####### Start second tx ########
+      // Call the trade method in Proxy Contract
+      transactionData2 = kyberNetworkProxyContract.methods.trade(
+        addressToSell, //ERC20 srcToken
+        srcAmountWei, //uint srcAmount
+        addressToBuy, //ERC20 destToken
+        fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
+        "10000000000000000000000000000000", //uint maxDestAmount
+        slippageRate, //uint minConversionRate
+        "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
+      ).encodeABI()
 
-      txReceipt = await web3.eth.sendTransaction({
-          from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
-          to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
-          data: transactionData1
-          })
-          .on('transactionHash', function(hash) {
+      // Display Modal for a successful swap
+      modalTitle.innerText = "Please approve the Swap🤖";
+      modalBody.innerText = `You are about to trade ${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}.` ;
+      modalBody.style.display = "";
+      closeBtn.innerText = "Approve"
+      $('.modal').modal('show');
 
-            // Alert modal to ask for confirmation of approved transaction
-            modalTitle.innerText = "Now confirm the approved Swap to exchange the tokens💱";
-            closeBtn.innerText = "Confirm"
-            modalBody.style.display = "none"
-            $('.modal').modal('show');
+      async function approveTx() {
 
-            async function executeTrade() {
+        txReceipt = await web3.eth.sendTransaction({
+            from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+            to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
+            data: transactionData1
+            })
+            .on('transactionHash', function(hash) {
 
-            txReceipt = await web3.eth.sendTransaction({
-              from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
-              to: kyberNetworkProxyAddress,
-              data: transactionData2,
-              }).on('transactionHash', function(hash){
-                // Change Swap Button for loader
-                swapToLoader();
-                // Change Modal to say please wait
-                modalTitle.innerText = "Please wait for the transaction to be mined";
-                modalBody.innerText = `Meanwhile, you can check the tx status on Etherscan`;
-                modalBody.style.display = "";
-                closeBtn.style.display = "none";
-                metaMaskBtn.innerText = "Check Tx Status";
-                (selectedEthereumNetwork == "mainnet") ? etherscanUrl = `https://etherscan.io/tx/${hash}` : etherscanUrl = `https://ropsten.etherscan.io/tx/${hash}`
-                metaMaskBtn.href = etherscanUrl
-                metaMaskBtn.style.display = "";
-                $('.modal').modal('show');
-              })
-              .catch(function(error) {
-                console.log(error);
-                loaderToSwap();
-            });
+              // Alert modal to ask for confirmation of approved transaction
+              modalTitle.innerText = "Now confirm the approved Swap to exchange the tokens💱";
+              closeBtn.innerText = "Confirm"
+              modalBody.style.display = "none"
+              $('.modal').modal('show');
 
-            // Change Loader for Swap Button
-            loaderToSwap();
+              async function executeTrade() {
 
-            // Display Modal for a successful swap
-            modalTitle.innerText = "Swap successful 👍";
-            modalBody.innerText = "";
-            modalBody.style.display = "none"
-            // Re-display close button
-            closeBtn.innerText = "New Swap"
-            closeBtn.style.display = ""
-            closeBtn.removeEventListener("click", executeTrade, { passive: true });
-            closeBtn.addEventListener("click", reloadMainPage);
-            metaMaskBtn.style.display = "none";
-            $('.modal').modal('show');
+              txReceipt = await web3.eth.sendTransaction({
+                from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+                to: kyberNetworkProxyAddress,
+                data: transactionData2,
+                }).on('transactionHash', function(hash){
+                  // Change Swap Button for loader
+                  swapToLoader();
+                  // Change Modal to say please wait
+                  modalTitle.innerText = "Please wait for the transaction to be mined 🕒";
+                  modalBody.innerText = `Meanwhile, you can check the tx status on Etherscan`;
+                  modalBody.style.display = "";
+                  closeBtn.style.display = "none";
+                  metaMaskBtn.innerText = "Check Tx Status";
+                  (selectedEthereumNetwork == "mainnet") ? etherscanUrl = `https://etherscan.io/tx/${hash}` : etherscanUrl = `https://ropsten.etherscan.io/tx/${hash}`
+                  metaMaskBtn.href = etherscanUrl
+                  metaMaskBtn.style.display = "";
+                  $('.modal').modal('show');
+                })
+                .catch(function(error) {
+                  console.log(error);
+                  loaderToSwap();
+              });
 
-              // Async Ende
-            }
-            // Remove first event listener
-            closeBtn.removeEventListener("click", approveTx, { passive: true });
-            // Add event Listener to function
-            closeBtn.addEventListener('click', executeTrade)
-          })
-          .catch(function(error) {
-            console.log(error);
-            loaderToSwap();
-            successful = false;
-          })
-      if (successful == false) return 0;
+              // Change Loader for Swap Button
+              loaderToSwap();
 
-    // approveTx() end
+              // Display Modal for a successful swap
+              modalTitle.innerText = "Swap successful 👍";
+              modalBody.innerText = "";
+              modalBody.style.display = "none"
+              // Re-display close button
+              closeBtn.innerText = "New Swap"
+              closeBtn.style.display = ""
+              closeBtn.removeEventListener("click", executeTrade, { passive: true });
+              closeBtn.addEventListener("click", reloadMainPage);
+              metaMaskBtn.style.display = "none";
+              $('.modal').modal('show');
+
+                // Async Ende
+              }
+              // Remove first event listener
+              closeBtn.removeEventListener("click", approveTx, { passive: true });
+              // Add event Listener to function
+              closeBtn.addEventListener('click', executeTrade)
+            })
+            .catch(function(error) {
+              console.log(error);
+              loaderToSwap();
+              successful = false;
+            })
+        if (successful == false) return 0;
+
+      // approveTx() end
+      }
+      closeBtn.addEventListener('click', approveTx)
+
+      // If token balance is less then srcAmount
+    } else {
+      modalTitle.innerText = "Insufficient Token Balance"
+      closeBtn.innerText = "Close"
+      $('.modal').modal('show');
     }
-    closeBtn.addEventListener('click', approveTx)
-
   // Else end
   }
 
