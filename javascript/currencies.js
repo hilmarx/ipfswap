@@ -206,9 +206,9 @@ window.onclick = function(event) {
     console.log(`sellTokenImageUrl: ${sellTokenImageUrl}`);
 
     // Set token-logo for token to buy. If it is ETH, then use local image
-    (destSymbol == "ETH") ? buyLogo.src = "images/ethereum.png" : buyLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${buyTokenImageUrl}.png`;
+    (destSymbol == "ETH") ? buyLogo.src = "images/ethereum.png" : buyLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/tokens/${buyTokenImageUrl}.png`;
     // Set token-logo for token to sell. If it is ETH, then use local image
-    (srcSymbol == "ETH") ? sellLogo.src = "images/ethereum.png" : sellLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${sellTokenImageUrl}.png`;
+    (srcSymbol == "ETH") ? sellLogo.src = "images/ethereum.png" : sellLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/tokens/${sellTokenImageUrl}.png`;
 
     // Set token address which the user wants to buy
     let swappedAddressToBuy = addressToSell;
@@ -271,7 +271,7 @@ window.onclick = function(event) {
           let sellTokenImageUrl = mainnetAddresses[srcSymbol];
 
           // Set token-logo for token to sell. If it is ETH, then use local image
-          (srcSymbol == "ETH") ? sellLogo.src = "images/ethereum.png" : sellLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${sellTokenImageUrl}.png`;
+          (srcSymbol == "ETH") ? sellLogo.src = "images/ethereum.png" : sellLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/tokens/${sellTokenImageUrl}.png`;
 
           // Set new token address for getExpectedRate function
           addressToSell = `${event.target.attributes[4].value}`;
@@ -307,7 +307,7 @@ window.onclick = function(event) {
           let buyTokenImageUrl = mainnetAddresses[destSymbol];
 
           // Set token-logo for token to buy. If it is ETH, then use local image
-          (destSymbol == "ETH") ? buyLogo.src = "images/ethereum.png" : buyLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${buyTokenImageUrl}.png`;
+          (destSymbol == "ETH") ? buyLogo.src = "images/ethereum.png" : buyLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/tokens/${buyTokenImageUrl}.png`;
 
           // Set token address which the user wants to buy
           addressToBuy = `${event.target.attributes[4].value}`;
