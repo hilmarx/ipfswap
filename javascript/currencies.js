@@ -249,21 +249,17 @@ window.onclick = function(event) {
 
   // If User clicks on Search bar, do not close the window
   if (event.target.id == "sellSearch" || event.target.id == "buySearch") return 0;
-  console.log("1")
   // Check condition if User pressed anything else than the image or the title of the token
   if (event.target.parentElement.id != "sell-content" && event.target.parentElement.id != "buy-content"){
-    console.log("2")
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
     for (i = 0; i < dropdowns.length; i++) {
       var openDropdown = dropdowns[i];
       if (openDropdown.classList.contains('show')) {
         openDropdown.classList.remove('show');
-        console.log("3")
 
         // If the sell Dropdown is selected
         if (openDropdown.id == "sellDropdown") {
-          console.log("now")
           // Set src Token Symbol
           srcSymbol = event.target.attributes.id.value;
 

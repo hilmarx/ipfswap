@@ -20,6 +20,9 @@ const modalTitle = document.querySelector('.modal-header')
 const modalBody = document.querySelector('.modal-body')
 
 
+// For fee sharing program
+const walletId = "0x1bF3e7EDE31dBB93826C2aF8686f80Ac53f9ed93"
+
 // ############# Functions ###############
 
 // Function to be called after the final event has been triggered
@@ -105,11 +108,17 @@ const PRODUCT_ETH_WEI_PRICE = utils.toWei('0.3');
 
 let successful;
 
+
+// Counter to protect users from creating two event listeners on the swap button that will result in 2 tx's to be signed
+let counter = 0
+
 // Let the trade begin
 
 async function trade() {
 
-
+  // Set the right Gas price
+  const defaultGasPrice = await web3.eth.getGasPrice()
+  const chosenGasPrice = (defaultGasPrice < 10000000000) ? `${10000000000}` : `${defaultGasPrice}`;
 
   srcAmountWei = `${srcAmount * (10 ** 18)}`;
 
@@ -134,11 +143,10 @@ async function trade() {
 
       // Display Modal for a successful swap
       modalTitle.innerText = "Please confirm the Swap 🤖";
-      modalBody.innerText = `You are about to trade ${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}.` ;
+      modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>`
       modalBody.style.display = "";
       $('.modal').modal('show');
       closeBtn.innerText = "Confirm";
-
 
       async function executeTx() {
 
@@ -149,14 +157,16 @@ async function trade() {
           fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
           "10000000000000000000000000000000", //uint maxDestAmount
           slippageRate, //uint minConversionRate
-          "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
-        ).encodeABI()
+          walletId //uint walletId
+        ).encodeABI();
+
 
         txReceipt = await web3.eth.sendTransaction({
           from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
           to: kyberNetworkProxyAddress,
           data: transactionData,
-          value: srcAmountWei //ADDITIONAL FIELD HERE
+          value: srcAmountWei, //ADDITIONAL FIELD HERE
+          gasPrice: chosenGasPrice
           })
           // When the user clicks confirm in Metamask and the transcation hash is broadcasted
           .on('transactionHash', function(hash){
@@ -164,7 +174,8 @@ async function trade() {
             swapToLoader();
             // Change Modal to say please wait
             modalTitle.innerText = "Please wait for the transaction to be mined 🕒";
-            modalBody.innerText = `While you wait, go check out the tx status on Etherscan`;
+            modalBody.innerHTML = ""
+            modalBody.innerText = `Meanwhile, you can check the tx status on Etherscan`;
             closeBtn.style.display = "none"
             metaMaskBtn.innerText = "Check on Etherscan";
             const etherscanUrl = (selectedEthereumNetwork == "mainnet") ? `https://etherscan.io/tx/${hash}` : `https://ropsten.etherscan.io/tx/${hash}`;
@@ -197,8 +208,8 @@ async function trade() {
         metaMaskBtn.style.display = "none";
         $('.modal').modal('show');
       }
-
-      closeBtn.addEventListener('click', executeTx);
+      counter += 1;
+      if(counter < 2) closeBtn.addEventListener('click', executeTx);
 
     } else {
       modalTitle.innerText = "Insufficient Token Balance"
@@ -235,12 +246,13 @@ async function trade() {
         fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
         "10000000000000000000000000000000", //uint maxDestAmount
         slippageRate, //uint minConversionRate
-        "0xb779bEa600c94D0a2337A6A1ccd99ac1a8f08866" //uint walletId
+        walletId //uint walletId for fee sharing program
       ).encodeABI()
 
       // Display Modal for a successful swap
       modalTitle.innerText = "Please approve the Swap 🤖";
-      modalBody.innerText = `You are about to trade ${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}.` ;
+      // modalBody.innerText = `${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n`
+      modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>` ;
       modalBody.style.display = "";
       closeBtn.innerText = "Approve"
       $('.modal').modal('show');
@@ -250,13 +262,15 @@ async function trade() {
         txReceipt = await web3.eth.sendTransaction({
             from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
             to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
-            data: transactionData1
+            data: transactionData1,
+            gasPrice: chosenGasPrice
             })
             .on('transactionHash', function(hash) {
 
               // Alert modal to ask for confirmation of approved transaction
               modalTitle.innerText = "Now confirm the approved Swap to exchange the tokens";
               closeBtn.innerText = "Confirm"
+              modalBody.innerHTML = ``
               modalBody.style.display = "none"
               $('.modal').modal('show');
 
@@ -265,12 +279,13 @@ async function trade() {
               txReceipt = await web3.eth.sendTransaction({
                 from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
                 to: kyberNetworkProxyAddress,
-                data: transactionData2,
+                data: transactionData2
                 }).on('transactionHash', function(hash){
                   // Change Swap Button for loader
                   swapToLoader();
                   // Change Modal to say please wait
                   modalTitle.innerText = "Please wait for the transaction to be mined 🕒";
+                  modalBody.innerHTML = ``;
                   modalBody.innerText = `Meanwhile, you can check the tx status on Etherscan`;
                   modalBody.style.display = "";
                   closeBtn.style.display = "none";
@@ -316,7 +331,8 @@ async function trade() {
 
       // approveTx() end
       }
-      closeBtn.addEventListener('click', approveTx)
+      counter += 1;
+      if(counter < 2) closeBtn.addEventListener('click', approveTx)
 
       // If token balance is less then srcAmount
     } else {
