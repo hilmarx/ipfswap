@@ -112,6 +112,7 @@ let successful;
 // Counter to protect users from creating two event listeners on the swap button that will result in 2 tx's to be signed
 let counter = 0
 
+// ############## TEST FUNCITON FOR ERROR MESSAGE #################
 
 // async function test() {
 
@@ -155,6 +156,7 @@ let counter = 0
 //             });
 // }
 
+// ############## TEST FUNCITON FOR ERROR MESSAGE #################
 
 //  ##################### Modal changes #######################
 function startModal() {
