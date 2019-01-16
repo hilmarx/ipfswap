@@ -34,6 +34,9 @@ let addressToSell = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 let addressToBuy;
 
+let srcDecimal = "18"
+let destDecimal = "18"
+
 // ##### Function that reloads page with or without query string that determines the network #####
 function reloadPage() {
 
@@ -182,33 +185,63 @@ function BuyFunction() {
   document.getElementById("buyDropdown").classList.toggle("show");
 }
 
+function setBuyValues() {
+
+  // Find token address of selected token from mainnetAddresses hash
+  let buyTokenImageUrl = mainnetAddresses[destSymbol];
+
+  // Set token-logo for token to buy. If it is ETH, then use local image
+  (destSymbol == "ETH") ? buyLogo.src = "images/ethereum.png" : buyLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/tokens/${buyTokenImageUrl}.png`;
+
+  // Re-run getExpectedRate function for new address pair & wait for the promise to resolve. Then update the numbers in the dest field
+  getExpectedRate()
+  .then((response) => {
+    updateDestValue();
+  })
+
+  // Set Dropdown value to Token acronym
+  document.getElementById("buy-button").innerText = `${destName} - (${destSymbol})`;
+
+  // Set buy-symbol to srcSybol
+  document.getElementById('buy-symbol').innerText = destSymbol
+  console.log("completed")
+}
+
+function setSellValues() {
+
+  // Find token address of selected token from mainnetAddresses hash
+  let sellTokenImageUrl = mainnetAddresses[srcSymbol];
+
+  // Set token-logo for token to sell. If it is ETH, then use local image
+  (srcSymbol == "ETH") ? sellLogo.src = "images/ethereum.png" : sellLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/tokens/${sellTokenImageUrl}.png`;
+
+  // Calc srcQuantity with srcDecimal
+  srcQuantity = `${10 ** srcDecimal}`;
+
+  // Re-run getExpectedRate function for new address pair & wait for the promise to resolve. Then update the numbers in the src field
+  getExpectedRate()
+  .then((response) => {
+    updateSrcValue();
+  })
+
+  // Set Dropdown value to Token name & symbol
+  document.getElementById("sell-button").innerText = `${srcName} - (${srcSymbol})`;
+
+  // Set sell-symbol Symbol to srcSybol
+  document.getElementById('sell-symbol').innerText = srcSymbol
+
+}
 
 // Close the dropdown menu if User selects a token from dropdown
 window.onclick = function(event) {
   // ############# SWAP TOKEN Information ###################
   if (event.target.className == "swap-image") {
-    console.log("I am in")
 
     // Set src Token Symbol
     let swappedSrcSymbol = destSymbol
     let swappedDestSymbol = srcSymbol
     destSymbol = swappedDestSymbol;
     srcSymbol = swappedSrcSymbol;
-    console.log(`Dest Symbol: ${destSymbol}`)
-    console.log(`Src Symbol: ${srcSymbol}`)
-
-    // Find token address of selected token from mainnetAddresses hash
-    let sellTokenImageUrl = mainnetAddresses[srcSymbol];
-    // Find token address of selected token from mainnetAddresses hash
-    let buyTokenImageUrl = mainnetAddresses[destSymbol];
-    // Find token address of selected token from mainnetAddresses hash
-
-    console.log(`sellTokenImageUrl: ${sellTokenImageUrl}`);
-
-    // Set token-logo for token to buy. If it is ETH, then use local image
-    (destSymbol == "ETH") ? buyLogo.src = "images/ethereum.png" : buyLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/tokens/${buyTokenImageUrl}.png`;
-    // Set token-logo for token to sell. If it is ETH, then use local image
-    (srcSymbol == "ETH") ? sellLogo.src = "images/ethereum.png" : sellLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/tokens/${sellTokenImageUrl}.png`;
 
     // Set token address which the user wants to buy
     let swappedAddressToBuy = addressToSell;
@@ -216,32 +249,21 @@ window.onclick = function(event) {
     addressToSell = swappedAddressToSell;
     addressToBuy = swappedAddressToBuy;
 
-    // Re-run getExpectedRate function for new address pair & wait for the promise to resolve. Then update the numbers in the dest field
-    getExpectedRate()
-    .then((response) => {
-      updateDestValue();
-    })
-
-    swappedDestName = srcName
-    swappedSrcName = destName
+    let swappedDestName = srcName
+    let swappedSrcName = destName
     srcName = swappedSrcName;
     destName = swappedDestName;
 
-    // Set Dropdown value to Token acronym
-    document.getElementById("buy-button").innerText = `${destName} - (${destSymbol})`;
+    let swappedDestDecimal = srcDecimal
+    let swappedSrcDecimal = destDecimal
+    srcDecimal = swappedSrcDecimal
+    destDecimal = swappedDestDecimal
 
-    // Set Dropdown value to Token acronym
-    document.getElementById("sell-button").innerText = `${srcName} - (${srcSymbol})`;
+    setBuyValues();
+    console.log("setBuyDone")
+    setSellValues();
+    console.log("setSellDone")
 
-    // Set buy-symbol to destSymbol
-    document.getElementById('buy-symbol').innerText = destSymbol
-
-    // Set sell-symbol Symbol to srcSy,bol
-    document.getElementById('sell-symbol').innerText = srcSymbol
-
-
-    // Set sell-symbol Symbol to srcSybol
-    document.getElementById('sell-symbol').innerText = srcSymbol
 
   }
 
@@ -263,34 +285,16 @@ window.onclick = function(event) {
           // Set src Token Symbol
           srcSymbol = event.target.attributes.id.value;
 
-          // Find token address of selected token from mainnetAddresses hash
-          let sellTokenImageUrl = mainnetAddresses[srcSymbol];
-
-          // Set token-logo for token to sell. If it is ETH, then use local image
-          (srcSymbol == "ETH") ? sellLogo.src = "images/ethereum.png" : sellLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/tokens/${sellTokenImageUrl}.png`;
-
           // Set new token address for getExpectedRate function
           addressToSell = `${event.target.attributes[4].value}`;
 
           // Get Source token decimal for GetExpectedRate function
           srcDecimal = event.target.dataset.decimal;
 
-          // Calc srcQuantity with srcDecimal
-          srcQuantity = `${10 ** srcDecimal}`;
-
-          // Re-run getExpectedRate function for new address pair & wait for the promise to resolve. Then update the numbers in the src field
-          getExpectedRate()
-          .then((response) => {
-            updateSrcValue();
-          })
-
+          // Get Token name
           srcName = event.target.attributes.name.value
-          // Set Dropdown value to Token name & symbol
-          document.getElementById("sell-button").innerText = `${srcName} - (${srcSymbol})`;
 
-          // Set sell-symbol Symbol to srcSybol
-          document.getElementById('sell-symbol').innerText = srcSymbol
-
+          setSellValues();
 
           return addressToSell;
           // If the buy Dropdown is selected
@@ -299,29 +303,16 @@ window.onclick = function(event) {
           // Set src Token Symbol
           destSymbol = event.target.attributes.id.value;
 
-          // Find token address of selected token from mainnetAddresses hash
-          let buyTokenImageUrl = mainnetAddresses[destSymbol];
-
-          // Set token-logo for token to buy. If it is ETH, then use local image
-          (destSymbol == "ETH") ? buyLogo.src = "images/ethereum.png" : buyLogo.src = `https://raw.githubusercontent.com/TrustWallet/tokens/master/tokens/${buyTokenImageUrl}.png`;
-
           // Set token address which the user wants to buy
           addressToBuy = `${event.target.attributes[4].value}`;
 
-
-          // Re-run getExpectedRate function for new address pair & wait for the promise to resolve. Then update the numbers in the dest field
-          getExpectedRate()
-          .then((response) => {
-            updateDestValue();
-          })
-
+          // Set token name
           destName = event.target.attributes.name.value
 
-          // Set Dropdown value to Token acronym
-          document.getElementById("buy-button").innerText = `${destName} - (${destSymbol})`;
+          // Get dest token decimal for displaying correct value on front end
+          destDecimal = event.target.dataset.decimal;
 
-          // Set buy-symbol to srcSybol
-          document.getElementById('buy-symbol').innerText = destSymbol
+          setBuyValues();
 
           return addressToBuy;
 
