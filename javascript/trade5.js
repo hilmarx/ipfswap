@@ -156,6 +156,8 @@ async function trade() {
   ########################
   */
 
+  // Trade () of ERC20 => ERC20
+
   // If User chooses to sell ETH
   if(addressToSell == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
 
@@ -164,13 +166,6 @@ async function trade() {
 
     if (etherBalance >= parseInt(srcAmountWei) ) {
 
-      // // Add Event listener to "SWAP" button of Modal which when clicked open the transaction
-      // // Display Modal for a successful swap
-      // modalTitle.innerText = "Please confirm the Swap 🤖";
-      // modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>`
-      // modalBody.style.display = "";
-      // $('.modal').modal('show');
-      // closeBtn.innerText = "Confirm";
       startModal()
 
 
@@ -210,21 +205,6 @@ async function trade() {
 
         successfulModal()
         closeBtn.removeEventListener("click", executeTx, { passive: true });
-        // // Change Loader for Swap Button
-        // loaderToSwap();
-
-        // // Display Modal for a successful swap
-        // modalTitle.innerText = "Swap successful 👍";
-        // modalBody.style.display = "none"
-        // closeBtn.innerText = "New Swap";
-        // // Re-display close button
-        // closeBtn.style.display = ""
-        // // remove event listener
-        // closeBtn.removeEventListener("click", executeTx, { passive: true });
-        // closeBtn.addEventListener("click", reloadMainPage);
-        // metaMaskBtn.style.display = "none";
-        // $('.modal').modal('show');
-
       }
       counter += 1;
       if(counter < 2) closeBtn.addEventListener('click', executeTx);
@@ -235,9 +215,6 @@ async function trade() {
       $('.modal').modal('show');
     }
 
-
-
-
   // ##############################################################
 
   // If User chooses to sell ERC20 TOken
@@ -246,15 +223,13 @@ async function trade() {
     // Set nonce
     nonce = await web3.eth.getTransactionCount(fetchedUserAddress);
 
-    // //First, user must approve KyberNetwork contract to trade src tokens
-    // srcTokenContract = new web3.eth.Contract(ERC20ABI, addressToSell);
-
     // Check if User gave Kyber any allowance in order to skip allow tx
     allowanceAmount = await srcTokenContract.methods.allowance(fetchedUserAddress,kyberNetworkProxyAddress).call()
 
     if (srcAmountWei <= allowanceAmount) {
         //proceed to step 3
         console.log(`Source Amount: ${srcAmountWei} is smaller than AllowanceAmount ${allowanceAmount}`)
+
     } else {
         //proceed to step 2
         console.log(`Source Amount: ${srcAmountWei} is greater than AllowanceAmount ${allowanceAmount}`)
@@ -266,13 +241,6 @@ async function trade() {
     if (erc20tokenBalance >= parseInt(srcAmountWei) ) {
 
       startModal();
-      // // Display Modal for a successful swap
-      // modalTitle.innerText = "Please approve the Swap 🤖";
-      // // modalBody.innerText = `${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n`
-      // modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${destAmount.toFixed(6)} ${destSymbol}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>` ;
-      // modalBody.style.display = "";
-      // closeBtn.innerText = "Approve"
-      // $('.modal').modal('show');
 
       async function approveTx() {
 
@@ -286,16 +254,9 @@ async function trade() {
             gasPrice: chosenGasPrice,
             nonce: nonce
             }, function(error, hash) {
-            // .on('transactionHash', function(hash) {
 
-
-              // Alert modal to ask for confirmation of approved transaction
-              modalTitle.innerText = "Now confirm the approved Swap to exchange the tokens";
-              closeBtn.innerText = "Confirm"
-              modalBody.innerHTML = ``
-              modalBody.style.display = "none"
-              $('.modal').modal('show');
-
+              console.log(hash)
+              tradeApprovedModal()
               async function executeTx() {
 
               // ####### Start second tx ########
@@ -319,44 +280,18 @@ async function trade() {
                 from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
                 to: kyberNetworkProxyAddress,
                 data: transactionData2,
-                nonce: nonce + 1
+                nonce: nonce + 1,
+                gas: 600000
               }, function(error, hash) {
-              // .on('transactionHash', function(hash){
-                  // Change Swap Button for loader
-                  swapToLoader();
-                  // Change Modal to say please wait
-                  modalTitle.innerText = "Please wait for the transaction to be mined 🕒";
-                  modalBody.innerHTML = ``;
-                  modalBody.innerText = `Meanwhile, you can check the tx status on Etherscan`;
-                  modalBody.style.display = "";
-                  closeBtn.style.display = "none";
-                  metaMaskBtn.innerText = "Check Tx Status";
-                  (selectedEthereumNetwork == "mainnet") ? etherscanUrl = `https://etherscan.io/tx/${hash}` : etherscanUrl = `https://ropsten.etherscan.io/tx/${hash}`
-                  metaMaskBtn.href = etherscanUrl
-                  metaMaskBtn.style.display = "";
-                  $('.modal').modal('show');
+                console.log(hash)
+                  waitingModal(hash)
                 })
                 .catch(function(error) {
                   console.log(error);
                   loaderToSwap();
               });
-
-              // Change Loader for Swap Button
-              loaderToSwap();
-
-              // Display Modal for a successful swap
-              modalTitle.innerText = "Swap successful 👍";
-              modalBody.innerText = "";
-              modalBody.style.display = "none"
-              // Re-display close button
-              closeBtn.innerText = "New Swap"
-              closeBtn.style.display = ""
-              closeBtn.removeEventListener("click", executeTx, { passive: true });
-              closeBtn.addEventListener("click", reloadMainPage);
-              metaMaskBtn.style.display = "none";
-              $('.modal').modal('show');
-
-                // Async Ende
+              // Open modal that display tx was successful
+              successfulModal()
               }
               // Remove first event listener
               closeBtn.removeEventListener("click", approveTx, { passive: true });
