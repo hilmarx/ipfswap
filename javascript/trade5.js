@@ -86,10 +86,10 @@ web3.eth.net.getNetworkType()
   }
 })
 
-
+let etherBalance;
 // Set ETH Balance to show on front end
 async function setEthBalance(fetchedUserAddress) {
-  let etherBalance = await web3.eth.getBalance(fetchedUserAddress)
+  etherBalance = await web3.eth.getBalance(fetchedUserAddress)
   document.getElementById('sell-max-token').innerText = `Max: ${(etherBalance / 10 ** srcDecimal).toFixed(5)} ${srcSymbol}`
 }
 
@@ -164,21 +164,15 @@ async function trade() {
 
     if (etherBalance >= parseInt(srcAmountWei) ) {
 
-      // Add Event listener to "SWAP" button of Modal which when clicked open the transaction
-      // Display Modal for a successful swap
-      modalTitle.innerText = "Please confirm the Swap 🤖";
-      modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>`
-      modalBody.style.display = "";
-      $('.modal').modal('show');
-      closeBtn.innerText = "Confirm";
+      // // Add Event listener to "SWAP" button of Modal which when clicked open the transaction
+      // // Display Modal for a successful swap
+      // modalTitle.innerText = "Please confirm the Swap 🤖";
+      // modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>`
+      // modalBody.style.display = "";
+      // $('.modal').modal('show');
+      // closeBtn.innerText = "Confirm";
+      startModal()
 
-            // Display Modal for a successful swap
-      modalTitle.innerText = "Please approve the Swap 🤖";
-      // modalBody.innerText = `${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n`
-      modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>` ;
-      modalBody.style.display = "";
-      closeBtn.innerText = "Approve"
-      $('.modal').modal('show');
 
       async function executeTx() {
 
@@ -202,19 +196,8 @@ async function trade() {
           })
           // When the user clicks confirm in Metamask and the transcation hash is broadcasted
           .on('transactionHash', function(hash){
-            // Change Swap Button for loader
-            swapToLoader();
-            // Change Modal to say please wait
-            modalTitle.innerText = "Please wait for the transaction to be mined 🕒";
-            modalBody.innerHTML = ""
-            modalBody.innerText = `Meanwhile, you can check the tx status on Etherscan`;
-            closeBtn.style.display = "none"
-            metaMaskBtn.innerText = "Check on Etherscan";
-            const etherscanUrl = (selectedEthereumNetwork == "mainnet") ? `https://etherscan.io/tx/${hash}` : `https://ropsten.etherscan.io/tx/${hash}`;
-            metaMaskBtn.href = etherscanUrl
-            metaMaskBtn.style.display = "";
-            $('.modal').modal('show');
-            })
+            waitingModal(hash)
+          })
           .catch(function(error) {
               console.log(error);
               loaderToSwap();
@@ -225,20 +208,22 @@ async function trade() {
 
         if (successful == false) return 0;
 
-        // Change Loader for Swap Button
-        loaderToSwap();
-
-        // Display Modal for a successful swap
-        modalTitle.innerText = "Swap successful 👍";
-        modalBody.style.display = "none"
-        closeBtn.innerText = "New Swap";
-        // Re-display close button
-        closeBtn.style.display = ""
-        // remove event listener
+        successfulModal()
         closeBtn.removeEventListener("click", executeTx, { passive: true });
-        closeBtn.addEventListener("click", reloadMainPage);
-        metaMaskBtn.style.display = "none";
-        $('.modal').modal('show');
+        // // Change Loader for Swap Button
+        // loaderToSwap();
+
+        // // Display Modal for a successful swap
+        // modalTitle.innerText = "Swap successful 👍";
+        // modalBody.style.display = "none"
+        // closeBtn.innerText = "New Swap";
+        // // Re-display close button
+        // closeBtn.style.display = ""
+        // // remove event listener
+        // closeBtn.removeEventListener("click", executeTx, { passive: true });
+        // closeBtn.addEventListener("click", reloadMainPage);
+        // metaMaskBtn.style.display = "none";
+        // $('.modal').modal('show');
 
       }
       counter += 1;
@@ -278,18 +263,16 @@ async function trade() {
     // // Call balanceOf function
     // let erc20tokenBalance = await srcTokenContract.methods.balanceOf(fetchedUserAddress).call();
 
-    console.log(erc20Balance);
-    console.log(parseInt(srcAmountWei))
-
     if (erc20tokenBalance >= parseInt(srcAmountWei) ) {
 
-      // Display Modal for a successful swap
-      modalTitle.innerText = "Please approve the Swap 🤖";
-      // modalBody.innerText = `${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n`
-      modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${destAmount} ${destSymbol}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>` ;
-      modalBody.style.display = "";
-      closeBtn.innerText = "Approve"
-      $('.modal').modal('show');
+      startModal();
+      // // Display Modal for a successful swap
+      // modalTitle.innerText = "Please approve the Swap 🤖";
+      // // modalBody.innerText = `${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n`
+      // modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${destAmount.toFixed(6)} ${destSymbol}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>` ;
+      // modalBody.style.display = "";
+      // closeBtn.innerText = "Approve"
+      // $('.modal').modal('show');
 
       async function approveTx() {
 
@@ -302,8 +285,9 @@ async function trade() {
             data: transactionData1,
             gasPrice: chosenGasPrice,
             nonce: nonce
-            })
-            .on('transactionHash', function(hash) {
+            }, function(error, hash) {
+            // .on('transactionHash', function(hash) {
+
 
               // Alert modal to ask for confirmation of approved transaction
               modalTitle.innerText = "Now confirm the approved Swap to exchange the tokens";
@@ -336,7 +320,8 @@ async function trade() {
                 to: kyberNetworkProxyAddress,
                 data: transactionData2,
                 nonce: nonce + 1
-              }).on('transactionHash', function(hash){
+              }, function(error, hash) {
+              // .on('transactionHash', function(hash){
                   // Change Swap Button for loader
                   swapToLoader();
                   // Change Modal to say please wait

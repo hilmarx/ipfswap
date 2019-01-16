@@ -225,7 +225,6 @@ function setBuyValues() {
 
   // Set buy-symbol to srcSybol
   document.getElementById('buy-symbol').innerText = destSymbol
-  console.log("completed")
 }
 
 function setSellValues() {
@@ -281,9 +280,8 @@ window.onclick = function(event) {
     destDecimal = swappedDestDecimal
 
     setBuyValues();
-    console.log("setBuyDone")
     setSellValues();
-    console.log("setSellDone")
+    getSellTokenBalance()
 
 
   }
