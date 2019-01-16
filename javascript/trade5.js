@@ -87,18 +87,40 @@ web3.eth.net.getNetworkType()
 })
 
 
+// Set ETH Balance to show on front end
+async function setEthBalance(fetchedUserAddress) {
+  let etherBalance = await web3.eth.getBalance(fetchedUserAddress)
+  document.getElementById('sell-max-token').innerText = `Max: ${(etherBalance / 10 ** srcDecimal).toFixed(5)} ${srcSymbol}`
+}
+
+
 // Fetch User Address
 async function fetchAddress() {
 
   await web3.eth.getAccounts(function(error, result) {
     fetchedUserAddressArray = result;
     fetchedUserAddress = fetchedUserAddressArray[0];
+    setEthBalance(fetchedUserAddress);
     return fetchedUserAddress;
-  });
+  })
 };
 
-
 const USER_ACCOUNT_2 = fetchAddress();
+
+
+
+
+
+// Check if user swapped web3 accounts
+
+// var account = fetchedUserAddress;
+// var accountInterval = setInterval(function() {
+//   if (fetchAddress() !== account) {
+//     account = fetchAddress();
+//     console.log("HAAAAALO")
+//   }
+// }, 100);
+
 
 // Input own Address
 const PRODUCT_ETH_PRICE = '0.3'
@@ -239,8 +261,8 @@ async function trade() {
     // Set nonce
     nonce = await web3.eth.getTransactionCount(fetchedUserAddress);
 
-    //First, user must approve KyberNetwork contract to trade src tokens
-    srcTokenContract = new web3.eth.Contract(ERC20ABI, addressToSell);
+    // //First, user must approve KyberNetwork contract to trade src tokens
+    // srcTokenContract = new web3.eth.Contract(ERC20ABI, addressToSell);
 
     // Check if User gave Kyber any allowance in order to skip allow tx
     allowanceAmount = await srcTokenContract.methods.allowance(fetchedUserAddress,kyberNetworkProxyAddress).call()
@@ -253,19 +275,18 @@ async function trade() {
         console.log(`Source Amount: ${srcAmountWei} is greater than AllowanceAmount ${allowanceAmount}`)
     }
 
-    // Call balanceOf function
-    let erc20Balance = await srcTokenContract.methods.balanceOf(fetchedUserAddress).call();
+    // // Call balanceOf function
+    // let erc20tokenBalance = await srcTokenContract.methods.balanceOf(fetchedUserAddress).call();
 
     console.log(erc20Balance);
     console.log(parseInt(srcAmountWei))
 
-    // if (erc20Balance >= parseInt(srcAmountWei) ) {
-    if (true == true ) {
+    if (erc20tokenBalance >= parseInt(srcAmountWei) ) {
 
       // Display Modal for a successful swap
       modalTitle.innerText = "Please approve the Swap 🤖";
       // modalBody.innerText = `${srcAmountWei / srcQuantity} ${srcSymbol} for ${(srcAmount  * expectedRate) / srcQuantity} ${destSymbol}\n`
-      modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${destAmount}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>` ;
+      modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${destAmount} ${destSymbol}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>` ;
       modalBody.style.display = "";
       closeBtn.innerText = "Approve"
       $('.modal').modal('show');
@@ -305,19 +326,16 @@ async function trade() {
                 walletId //uint walletId for fee sharing program
               ).encodeABI()
 
-              estimatedGasLimit = await web3.eth.estimateGas({
-                  to: addressToBuy,
-                  data: transactionData2
-              })
-
-              console.log(estimatedGasLimit);
+              // estimatedGasLimit = await web3.eth.estimateGas({
+              //     to: addressToBuy,
+              //     data: transactionData2
+              // })
 
               txReceipt = await web3.eth.sendTransaction({
                 from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
                 to: kyberNetworkProxyAddress,
                 data: transactionData2,
                 nonce: nonce + 1
-                // gasPrice: 14000000000
               }).on('transactionHash', function(hash){
                   // Change Swap Button for loader
                   swapToLoader();

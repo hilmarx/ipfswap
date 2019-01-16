@@ -52,6 +52,31 @@
   border-bottom: 1px solid #ddd;
 }
 
+/*Name under logo*/
+#buy-button {
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 5px;
+}
+/*Name under logo*/
+#sell-button {
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 5px;
+}
+
+.max-token {
+  font-size: 12px;
+  font-weight: lighter;
+  font-style: italic;
+}
+
+
+
+
+
+
+
 /* The search field when it gets focus/clicked on */
 #myInput:focus {outline: 3px solid #ddd;}
 

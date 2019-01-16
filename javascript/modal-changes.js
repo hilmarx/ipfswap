@@ -65,6 +65,51 @@ function completedModal() {
   $('.modal').modal('show');
 }
 
+
+
+async function approveTx() {
+
+  transactionData1 = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
+
+  txReceipt = await web3.eth.sendTransaction({
+      from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+      to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
+      data: transactionData1,
+      gasPrice: chosenGasPrice,
+      nonce: nonce
+      })
+      .on('transactionHash', function(hash) {
+        // Called when the user presses "Confirm" button
+        async function executeTx() {
+        // ####### Start second tx ########
+        // Call the trade method in Proxy Contract
+        trsansactionData2 = kyberNetworkProxyContract.methods.trade(
+          addressToSell, //ERC20 srcToken
+          srcAmountWei, //uint srcAmount
+          addressToBuy, //ERC20 destToken
+          fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
+          "10000000000000000000000000000000", //uint maxDestAmount
+          slippageRate, //uint minConversionRate
+          walletId //uint walletId for fee sharing program
+        ).encodeABI()
+
+        txReceipt = await web3.eth.sendTransaction({
+          from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+          to: kyberNetworkProxyAddress,
+          data: transactionData2,
+          nonce: nonce + 1
+
+
+
+
+
+
+
+
+
+
+
+
 //  ##################### Modal changes END #######################
 
 // ############## TEST FUNCITON FOR ERROR MESSAGE #################

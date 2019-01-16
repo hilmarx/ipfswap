@@ -32,6 +32,10 @@ let url;
 // By default, address to sell will be ETH (Same for ropsten and mainnet)
 let addressToSell = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
+// Show ERC20 Balance
+
+let erc20tokenBalance;
+
 let addressToBuy;
 
 let srcDecimal = "18"
@@ -171,7 +175,24 @@ function fetchCurrencies() {
 
 fetchCurrencies();
 
+async function getSellTokenBalance() {
+  // Get Token Balance
+  // If Ether to sekk
+  if (addressToSell == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
+    // Change Max amount
+    maxSellValue = (etherBalance / 10 ** srcDecimal).toFixed(5)
+    document.getElementById('sell-max-token').innerText = `Max: ${maxSellValue} ${srcSymbol}`
+  } else {
+    // Create Contract instance of token to sell
+    srcTokenContract = new web3.eth.Contract(ERC20ABI, addressToSell);
 
+    // Fetch Token balance
+    erc20tokenBalance = await srcTokenContract.methods.balanceOf(fetchedUserAddress).call();
+    maxSellValue = (erc20tokenBalance / 10 ** srcDecimal).toFixed(5)
+    // Change Max amount
+    document.getElementById('sell-max-token').innerText = `Max: ${maxSellValue} ${srcSymbol}`
+  }
+}
 
 
 /* When the user clicks on the button,
@@ -293,6 +314,8 @@ window.onclick = function(event) {
 
           // Get Token name
           srcName = event.target.attributes.name.value
+
+          getSellTokenBalance()
 
           setSellValues();
 
