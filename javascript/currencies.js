@@ -179,7 +179,6 @@ async function getSellTokenBalance() {
   // If Ether to sekk
   if (addressToSell == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
     // Change Max amount
-    console.log("in getSellTokenBalance")
     maxSellValue = (etherBalance / 10 ** srcDecimal).toFixed(5)
     document.getElementById('sell-max-token').innerText = `Max: ${maxSellValue} ${srcSymbol}`
   } else {

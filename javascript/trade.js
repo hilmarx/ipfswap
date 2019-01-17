@@ -101,7 +101,6 @@ web3.eth.net.getNetworkType()
 
 // Set ETH Balance to show on front end
 async function setEthBalance(fetchedUserAddress) {
-  console.log("hi")
   etherBalance = await web3.eth.getBalance(fetchedUserAddress)
   if (addressToSell == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
   document.getElementById('sell-max-token').innerText = `Max: ${(etherBalance / 10 ** srcDecimal).toFixed(5)} ${srcSymbol}`
@@ -206,7 +205,6 @@ async function executeTx() {
     gas: 600000,
     gasPrice: chosenGasPrice
   }, function(error, hash) {
-      console.log(hash)
       waitingModal(hash)
     })
     .catch(function(error) {
@@ -255,13 +253,11 @@ async function approveTx() {
         // Remove first event listener
         closeBtn.removeEventListener("click", approveTx, { passive: true });
         // Add event Listener to function
-        console.log("1")
         closeBtn.addEventListener('click', executeTx)
       })
       .catch(function(error) {
         console.log(error);
         successful = false;
-        console.log("2")
         closeBtn.removeEventListener("click", executeTx, { passive: true });
         canceledTxModal()
       })
@@ -322,7 +318,7 @@ async function trade() {
       // If User already approved Kyber to exchange tokens, skip the approval() method
       if (srcAmountWei <= allowanceAmount) {
 
-        console.log(`Source Amount: ${srcAmountWei} is smaller than AllowanceAmount ${allowanceAmount}`)
+        // console.log(`Source Amount: ${srcAmountWei} is smaller than AllowanceAmount ${allowanceAmount}`)
 
         // Open respective Modal
         skippedApprovalModal();
@@ -332,7 +328,7 @@ async function trade() {
       // If User has not approved Kyber to trade tokens, call approval first
       } else {
 
-        console.log(`Source Amount: ${srcAmountWei} is greater than AllowanceAmount ${allowanceAmount}`)
+        // console.log(`Source Amount: ${srcAmountWei} is greater than AllowanceAmount ${allowanceAmount}`)
 
         startModal();
         // Create event listener that calls executeTx function
