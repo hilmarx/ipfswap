@@ -59,10 +59,6 @@ html, body {
   padding-top: 30px;
 }
 
-/*.swap-card-content {
-  align-content: center !important;
-}*/
-
 #sell-card {
 /*  display: flex;
 */
@@ -109,8 +105,7 @@ html, body {
 }
 
 #buy-card {
-/*  display: flex;
-*/  flex-direction: column;
+  flex-direction: column;
   width: 200px;
 }
 
@@ -149,6 +144,10 @@ html, body {
 
 /*Amount input fields*/
 
+.form-control {
+  margin-top: 0.2rem;
+}
+
 #src-amount {
   align-self: baseline;
   border: none;
@@ -182,20 +181,21 @@ html, body {
 /*Swap Button*/
 
 #swap-button {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
   color: white;
   font-weight: bold;
-  border:2px solid white;
-  border-radius:5px;
-  box-shadow:2px 2px white;
-  font-size: 1.3rem;
+  border: 2.4px solid white;
+  border-radius: .5px;
+  /*box-shadow:2px 2px white;*/
+  font-size: 1.4rem;
 }
 
 #swap-button:hover {
   background-color: rgba(255, 255, 255, 0);
   box-shadow:0 0 0;
-  transform:translate(2px,2px);
+/*  transform:translate(2px,2px);
+*/
   outline-color: rgba(255, 255, 255, 0);
   outline-offset: 15px;
   box-shadow: inset 0 0 50px rgba(255, 255, 255, .5), 0 0 20px rgba(255, 255, 255, .2);
@@ -244,8 +244,10 @@ html, body {
 .swap-image {
   width: 1em;
   height: 1em;
+}
 
-
+.swap-image:hover {
+  cursor: pointer;
 }
 
 .empty-swap-image {

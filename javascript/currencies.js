@@ -33,7 +33,6 @@ let url;
 let addressToSell = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 // Show ERC20 Balance
-
 let erc20tokenBalance;
 
 let addressToBuy;
@@ -69,10 +68,10 @@ function fetchApiFromSelectedNetwork() {
   // If selected Network is Mainnet
   if (selectedEthereumNetwork == "mainnet") {
     // Kyber Network ERC20 mainnet address
-    addressToBuy = "0xdd974d5c2e2928dea5f71b9825b8b646686bd200";
+    addressToBuy = "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359";
   } else if (selectedEthereumNetwork = "ropsten" ) {
     // Kyber Network ERC20 ropstem address
-    addressToBuy = "0x4e470dc7321e84ca96fcaedd0c8abcebbaeb68c6";
+    addressToBuy = "0xad6d458402f60fd3bd25163575031acdce07538d";
   };
 }
 
@@ -92,12 +91,12 @@ const mainnetAddresses = {};
 // Assign currently selected src and dest token symbols
 
 let srcSymbol = "ETH";
-let destSymbol = "KNC";
+let destSymbol = "DAI";
 
 // Assign currently selected src and dest names
 
 let srcName = "Ethereum";
-let destName = "KyberNetwork"
+let destName = "DAI"
 
 // Set default source Token Decimal number to 10^18
 let srcQuantity = "1000000000000000000";
@@ -180,6 +179,7 @@ async function getSellTokenBalance() {
   // If Ether to sekk
   if (addressToSell == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
     // Change Max amount
+    console.log("in getSellTokenBalance")
     maxSellValue = (etherBalance / 10 ** srcDecimal).toFixed(5)
     document.getElementById('sell-max-token').innerText = `Max: ${maxSellValue} ${srcSymbol}`
   } else {
@@ -283,7 +283,6 @@ window.onclick = function(event) {
     setSellValues();
     getSellTokenBalance()
 
-
   }
 
   // ############# TOKEN SELECTION ###################
@@ -344,11 +343,6 @@ window.onclick = function(event) {
   }
 }
 
-sellSearch = document.querySelector('#sellSearch');
-sellSearch.addEventListener('keyup', filterFunction)
-
-buySearch = document.querySelector('#buySearch');
-buySearch.addEventListener('keyup', filterFunction)
 
 // Filter Functionality to search for specific currencies with input
 function filterFunction(event) {
@@ -374,3 +368,9 @@ function filterFunction(event) {
     }
   }
 }
+
+sellSearch = document.querySelector('#sellSearch');
+sellSearch.addEventListener('keyup', filterFunction)
+
+buySearch = document.querySelector('#buySearch');
+buySearch.addEventListener('keyup', filterFunction)

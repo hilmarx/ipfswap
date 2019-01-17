@@ -56,13 +56,13 @@
 #buy-button {
   padding-left: 0;
   padding-right: 0;
-  padding-bottom: 5px;
+  padding-bottom: 0px;
 }
 /*Name under logo*/
 #sell-button {
   padding-left: 0;
   padding-right: 0;
-  padding-bottom: 5px;
+  padding-bottom: 0px;
 }
 
 .max-token {
@@ -70,12 +70,6 @@
   font-weight: lighter;
   font-style: italic;
 }
-
-
-
-
-
-
 
 /* The search field when it gets focus/clicked on */
 #myInput:focus {outline: 3px solid #ddd;}

@@ -4,19 +4,26 @@
 */}
 
 #metamask-button {
-  color: black;
-  background-color: blue;
+  color: white;
+  border-radius: 2px;
+  background-color: grey;
+  border: none;
+  border-radius: 2px;
+}
+
+#metamask-button:hover {
+  cursor: pointer;
 }
 
 .loader {
-  border: 16px solid white; /* Light grey */
-  border-top: 16px solid #9198e5; /* Purple */
+  border: 2px solid white; /* Light grey */
+  border-top: 2px solid #E66465; /* Salmon */
   margin: 0 auto;
   margin-top: 20px;
   margin-bottom: 20px;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   animation: spin 2s linear infinite;
 }
 
@@ -30,3 +37,18 @@
   font-weight: lighter;
   padding-left: 1.8px;
 }
+
+/*Close button*/
+
+#close-button {
+  background-color: #E66465; /* Salmon */
+  border: none;
+  border-radius: 2px;
+}
+
+
+
+
+
+
+
