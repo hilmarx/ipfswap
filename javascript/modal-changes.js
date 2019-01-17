@@ -71,6 +71,13 @@ function zeroModal() {
   $('.modal').modal('show');
 }
 
+function insufficientFundsModal() {
+  modalTitle.innerText = "Insufficient funds"
+  modalBody.style.display = "none"
+  closeBtn.innerText = "Close"
+  $('.modal').modal('show');
+}
+
 //  ##################### Modal changes END #######################
 
 

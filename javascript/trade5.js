@@ -107,8 +107,16 @@ async function fetchAddress() {
 
 const USER_ACCOUNT_2 = fetchAddress();
 
+// Set the current gas price to whats the average on the ETH network and if lower than 10, set to 10
+let defaultGasPrice
+let chosenGasPrice
 
+async function getEthereumGasPrice() {
+  defaultGasPrice = await web3.eth.getGasPrice()
+  chosenGasPrice = (defaultGasPrice < 10000000000) ? `${10000000000}` : `${defaultGasPrice}`;
+}
 
+getEthereumGasPrice()
 
 
 // Check if user swapped web3 accounts
@@ -135,93 +143,155 @@ let successful;
 let counter = 0
 
 
+// ################ Ether => ERC20 Trade ###################
+async function executeEtherTx() {
+
+  transactionData = kyberNetworkProxyContract.methods.trade(
+    addressToSell, //ETH srcToken
+    srcAmountWei, //uint srcAmount
+    addressToBuy, //ERC20 destToken
+    fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
+    "10000000000000000000000000000000", //uint maxDestAmount
+    slippageRate, //uint minConversionRate
+    walletId //uint walletId
+  ).encodeABI();
+
+
+  txReceipt = await web3.eth.sendTransaction({
+    from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+    to: kyberNetworkProxyAddress,
+    data: transactionData,
+    value: srcAmountWei, //ADDITIONAL FIELD HERE
+    gasPrice: chosenGasPrice
+    })
+    // When the user clicks confirm in Metamask and the transcation hash is broadcasted
+    .on('transactionHash', function(hash){
+      waitingModal(hash)
+    })
+    .catch(function(error) {
+        console.log(error);
+        loaderToSwap();
+        // Reload page to avoid having multiple tx queued up
+        location.reload();
+        successful = false;
+    })
+  // IF tx was abondend, do dont show succesfull Modal
+  if (successful == false) return 0;
+
+  successfulModal()
+  closeBtn.removeEventListener("click", executeEtherTx, { passive: true });
+}
+
+// ####################################
+
+// ####### Trade() ERC20 => ERC20 #######
+
+async function executeTx() {
+
+  // ####### Start second tx ########
+  // Call the trade method in Proxy Contract
+  transactionData2 = kyberNetworkProxyContract.methods.trade(
+    addressToSell, //ERC20 srcToken
+    srcAmountWei, //uint srcAmount
+    addressToBuy, //ERC20 destToken
+    fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
+    "10000000000000000000000000000000", //uint maxDestAmount
+    slippageRate, //uint minConversionRate
+    walletId //uint walletId for fee sharing program
+  ).encodeABI()
+
+  // estimatedGasLimit = await web3.eth.estimateGas({
+  //     to: addressToBuy,
+  //     data: transactionData2
+  // })
+
+  txReceipt = await web3.eth.sendTransaction({
+    from: fetchedUserAddress,
+    to: kyberNetworkProxyAddress,
+    data: transactionData2,
+    nonce: nonce + 1,
+    gas: 600000,
+    gasPrice: chosenGasPrice
+  }, function(error, hash) {
+    console.log(hash)
+      waitingModal(hash)
+    })
+    .catch(function(error) {
+      console.log(error);
+      loaderToSwap();
+  });
+
+  // Open modal that display tx was successful
+  closeBtn.removeEventListener('click', executeTx, {passive: true});
+  successfulModal()
+
+  // End of Async
+  }
+
+// ### Approve TX ERC 20 => ERC220 #######
+
+async function approveTx() {
+
+  transactionData1 = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
+
+
+  txReceipt = await web3.eth.sendTransaction({
+      from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
+      to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
+      data: transactionData1,
+      gasPrice: chosenGasPrice,
+      nonce: nonce
+      }, function(error, hash) {
+
+        console.log(hash)
+        tradeApprovedModal()
+        // Remove first event listener
+        closeBtn.removeEventListener("click", approveTx, { passive: true });
+        // Add event Listener to function
+        closeBtn.addEventListener('click', executeTx)
+      })
+      .catch(function(error) {
+        console.log(error);
+        loaderToSwap();
+        successful = false;
+      })
+  if (successful == false) return 0;
+
+}
+
 // Let the trade begin
 
 async function trade() {
 
+  // Check if source Amount is greater than 0
   if (srcAmount == 0) {
     zeroModal();
     return 0
   }
-
-  // Set the right Gas price
-  const defaultGasPrice = await web3.eth.getGasPrice()
-  const chosenGasPrice = (defaultGasPrice < 10000000000) ? `${10000000000}` : `${defaultGasPrice}`;
-
-  // srcAmountWei = `${srcAmount * (10 ** 18)}`;
-
   srcAmountWei = `${srcAmount * (10 ** parseInt(srcDecimal))}`;
 
   // Set successful to true
   successful = true;
 
-  /*
-  ########################
-  ### TRADE EXECUTION ####
-  ########################
-  */
-
-  // Trade () of ERC20 => ERC20
+  /*### TRADE EXECUTION ####*/
 
   // If User chooses to sell ETH
   if(addressToSell == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
 
-    // Call balanceOf function
+    // Check if user has sufficient ether available
     let etherBalance = await web3.eth.getBalance(fetchedUserAddress)
-
     if (etherBalance >= parseInt(srcAmountWei) ) {
-
       startModal()
-
-
-      async function executeTx() {
-
-        transactionData = kyberNetworkProxyContract.methods.trade(
-          addressToSell, //ETH srcToken
-          srcAmountWei, //uint srcAmount
-          addressToBuy, //ERC20 destToken
-          fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
-          "10000000000000000000000000000000", //uint maxDestAmount
-          slippageRate, //uint minConversionRate
-          walletId //uint walletId
-        ).encodeABI();
-
-
-        txReceipt = await web3.eth.sendTransaction({
-          from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
-          to: kyberNetworkProxyAddress,
-          data: transactionData,
-          value: srcAmountWei, //ADDITIONAL FIELD HERE
-          gasPrice: chosenGasPrice
-          })
-          // When the user clicks confirm in Metamask and the transcation hash is broadcasted
-          .on('transactionHash', function(hash){
-            waitingModal(hash)
-          })
-          .catch(function(error) {
-              console.log(error);
-              loaderToSwap();
-              // Reload page to avoid having multiple tx queued up
-              location.reload();
-              successful = false;
-          })
-
-        if (successful == false) return 0;
-
-        successfulModal()
-        closeBtn.removeEventListener("click", executeTx, { passive: true });
-      }
       counter += 1;
-      if(counter < 2) closeBtn.addEventListener('click', executeTx);
 
+      // Only add the Event Listener once, to avoid multiple tx popping up if user hits swap multiple times
+      if(counter < 2) closeBtn.addEventListener('click', executeEtherTx);
+
+    // If not, dont execute trade
     } else {
-      modalTitle.innerText = "Insufficient Token Balance"
-      closeBtn.innerText = "Close"
-      $('.modal').modal('show');
+      insufficientFundsModal()
     }
-
   // ##############################################################
-
   // If User chooses to sell ERC20 TOken
   }else {
 
@@ -246,82 +316,12 @@ async function trade() {
     if (erc20tokenBalance >= parseInt(srcAmountWei) ) {
 
       startModal();
-
-      async function approveTx() {
-
-        transactionData1 = srcTokenContract.methods.approve(kyberNetworkProxyAddress, srcAmountWei).encodeABI()
-
-
-        txReceipt = await web3.eth.sendTransaction({
-            from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
-            to: addressToSell, //srcTokenContract resluted in error as it did not provide the contracts address, but the object itself,
-            data: transactionData1,
-            gasPrice: chosenGasPrice,
-            nonce: nonce
-            }, function(error, hash) {
-
-              console.log(hash)
-              tradeApprovedModal()
-              async function executeTx() {
-
-              // ####### Start second tx ########
-              // Call the trade method in Proxy Contract
-              transactionData2 = kyberNetworkProxyContract.methods.trade(
-                addressToSell, //ERC20 srcToken
-                srcAmountWei, //uint srcAmount
-                addressToBuy, //ERC20 destToken
-                fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
-                "10000000000000000000000000000000", //uint maxDestAmount
-                slippageRate, //uint minConversionRate
-                walletId //uint walletId for fee sharing program
-              ).encodeABI()
-
-              // estimatedGasLimit = await web3.eth.estimateGas({
-              //     to: addressToBuy,
-              //     data: transactionData2
-              // })
-
-              txReceipt = await web3.eth.sendTransaction({
-                from: fetchedUserAddress, //obtained from website interface Eg. Metamask, Ledger etc.
-                to: kyberNetworkProxyAddress,
-                data: transactionData2,
-                nonce: nonce + 1,
-                gas: 600000,
-                gasPrice: chosenGasPrice
-              }, function(error, hash) {
-                console.log(hash)
-                  waitingModal(hash)
-                })
-                .catch(function(error) {
-                  console.log(error);
-                  loaderToSwap();
-              });
-              // Open modal that display tx was successful
-              successfulModal()
-              }
-              // Remove first event listener
-              closeBtn.removeEventListener("click", approveTx, { passive: true });
-              // Add event Listener to function
-              closeBtn.addEventListener('click', executeTx)
-            })
-            .catch(function(error) {
-              console.log(error);
-              loaderToSwap();
-              successful = false;
-            })
-        if (successful == false) return 0;
-
-      // approveTx() end
-      }
       counter += 1;
       if(counter < 2) closeBtn.addEventListener('click', approveTx)
 
       // If token balance is less then srcAmount
     } else {
-      modalTitle.innerText = "Insufficient Token Balance"
-      modalBody.style.display = "none"
-      closeBtn.innerText = "Close"
-      $('.modal').modal('show');
+      insufficientFundsModal()
     }
   // Else end
   }
