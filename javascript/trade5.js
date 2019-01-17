@@ -19,6 +19,10 @@ const closeBtn = document.querySelector('#close-button')
 const modalTitle = document.querySelector('.modal-header')
 const modalBody = document.querySelector('.modal-body')
 
+const maxDestAmount = "10000000000000000000000000000000"
+
+
+
 
 // For fee sharing program
 const walletId = "0x1bF3e7EDE31dBB93826C2aF8686f80Ac53f9ed93"
@@ -94,18 +98,18 @@ async function setEthBalance(fetchedUserAddress) {
 }
 
 
-// Fetch User Address
-async function fetchAddress() {
+// // Fetch User Address
+// async function fetchAddress() {
 
-  await web3.eth.getAccounts(function(error, result) {
-    fetchedUserAddressArray = result;
-    fetchedUserAddress = fetchedUserAddressArray[0];
-    setEthBalance(fetchedUserAddress);
-    return fetchedUserAddress;
-  })
-};
+//   await web3.eth.getAccounts(function(error, result) {
+//     fetchedUserAddressArray = result;
+//     fetchedUserAddress = fetchedUserAddressArray[0];
+//     setEthBalance(fetchedUserAddress);
+//     return fetchedUserAddress;
+//   })
+// };
 
-const USER_ACCOUNT_2 = fetchAddress();
+// const USER_ACCOUNT_2 = fetchAddress();
 
 // Set the current gas price to whats the average on the ETH network and if lower than 10, set to 10
 let defaultGasPrice
@@ -119,15 +123,14 @@ async function getEthereumGasPrice() {
 getEthereumGasPrice()
 
 
-// Check if user swapped web3 accounts
+// Check if user swapped web3 accounts & Set initial Ether Balance
 
-// var account = fetchedUserAddress;
-// var accountInterval = setInterval(function() {
-//   if (fetchAddress() !== account) {
-//     account = fetchAddress();
-//     console.log("HAAAAALO")
-//   }
-// }, 100);
+function newMetaMaskAddress(error,data) {
+  fetchedUserAddress = `${error['selectedAddress']}`
+  setEthBalance(fetchedUserAddress);
+}
+
+web3.currentProvider.publicConfigStore.on('update', newMetaMaskAddress);
 
 
 // Input own Address
@@ -151,7 +154,7 @@ async function executeEtherTx() {
     srcAmountWei, //uint srcAmount
     addressToBuy, //ERC20 destToken
     fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
-    "10000000000000000000000000000000", //uint maxDestAmount
+    maxDestAmount, //uint maxDestAmount
     slippageRate, //uint minConversionRate
     walletId //uint walletId
   ).encodeABI();
@@ -170,16 +173,27 @@ async function executeEtherTx() {
     })
     .catch(function(error) {
         console.log(error);
-        loaderToSwap();
         // Reload page to avoid having multiple tx queued up
-        location.reload();
+        canceledTxModal();
         successful = false;
     })
   // IF tx was abondend, do dont show succesfull Modal
+  closeBtn.removeEventListener("click", executeEtherTx, { passive: true });
+
   if (successful == false) return 0;
 
+
   successfulModal()
-  closeBtn.removeEventListener("click", executeEtherTx, { passive: true });
+  var templateParams = {
+    srcToken: srcSymbol,
+    destToken: destSymbol,
+    srcQuantity: srcAmount,
+    destQuantity: destAmount,
+    network: selectedEthereumNetwork
+  }
+
+  // Send anonymous notifcation that a tx was triggered
+  emailjs.send('default_service', 'template_EFJQRdCL', templateParams,'user_xN7N3ZJAOLHhHiviFcV1H');
 }
 
 // ####################################
@@ -195,7 +209,7 @@ async function executeTx() {
     srcAmountWei, //uint srcAmount
     addressToBuy, //ERC20 destToken
     fetchedUserAddress, //address destAddress => VENDOR_WALLET_ADDRESS
-    "10000000000000000000000000000000", //uint maxDestAmount
+    maxDestAmount, //uint maxDestAmount
     slippageRate, //uint minConversionRate
     walletId //uint walletId for fee sharing program
   ).encodeABI()
@@ -213,17 +227,33 @@ async function executeTx() {
     gas: 600000,
     gasPrice: chosenGasPrice
   }, function(error, hash) {
-    console.log(hash)
+      console.log(hash)
       waitingModal(hash)
     })
     .catch(function(error) {
       console.log(error);
-      loaderToSwap();
+      canceledTxModal();
+      successful = false;
+
   });
 
   // Open modal that display tx was successful
   closeBtn.removeEventListener('click', executeTx, {passive: true});
+
+  // Only show successful modal when trade was executed
+  if (successful == false) return 0;
+
   successfulModal()
+  var templateParams = {
+    srcToken: srcSymbol,
+    destToken: destSymbol,
+    srcQuantity: srcAmount,
+    destQuantity: destAmount,
+    network: selectedEthereumNetwork
+  }
+
+  // Send anonymous notifcation that a tx was triggered
+  emailjs.send('default_service', 'template_EFJQRdCL', templateParams,'user_xN7N3ZJAOLHhHiviFcV1H');
 
   // End of Async
   }
@@ -248,12 +278,15 @@ async function approveTx() {
         // Remove first event listener
         closeBtn.removeEventListener("click", approveTx, { passive: true });
         // Add event Listener to function
+        console.log("1")
         closeBtn.addEventListener('click', executeTx)
       })
       .catch(function(error) {
         console.log(error);
-        loaderToSwap();
         successful = false;
+        console.log("2")
+        closeBtn.removeEventListener("click", executeTx, { passive: true });
+        canceledTxModal()
       })
   if (successful == false) return 0;
 
@@ -291,39 +324,50 @@ async function trade() {
     } else {
       insufficientFundsModal()
     }
+
+
   // ##############################################################
   // If User chooses to sell ERC20 TOken
-  }else {
+  } else {
 
-    // Set nonce
-    nonce = await web3.eth.getTransactionCount(fetchedUserAddress);
-
-    // Check if User gave Kyber any allowance in order to skip allow tx
-    allowanceAmount = await srcTokenContract.methods.allowance(fetchedUserAddress,kyberNetworkProxyAddress).call()
-
-    if (srcAmountWei <= allowanceAmount) {
-        //proceed to step 3
-        console.log(`Source Amount: ${srcAmountWei} is smaller than AllowanceAmount ${allowanceAmount}`)
-
-    } else {
-        //proceed to step 2
-        console.log(`Source Amount: ${srcAmountWei} is greater than AllowanceAmount ${allowanceAmount}`)
-    }
-
-    // // Call balanceOf function
-    // let erc20tokenBalance = await srcTokenContract.methods.balanceOf(fetchedUserAddress).call();
-
+    // IF user has enough funds of the selected Token, start the process
     if (erc20tokenBalance >= parseInt(srcAmountWei) ) {
 
-      startModal();
-      counter += 1;
-      if(counter < 2) closeBtn.addEventListener('click', approveTx)
+      // Check if User gave Kyber any allowance in order to skip allow tx
+      allowanceAmount = await srcTokenContract.methods.allowance(fetchedUserAddress,kyberNetworkProxyAddress).call()
 
-      // If token balance is less then srcAmount
+      // Set nonce
+      nonce = await web3.eth.getTransactionCount(fetchedUserAddress);
+
+      // Iterate on counter to prevent 2 tx popping up for one
+      counter += 1;
+
+      // If User already approved Kyber to exchange tokens, skip the approval() method
+      if (srcAmountWei <= allowanceAmount) {
+
+        console.log(`Source Amount: ${srcAmountWei} is smaller than AllowanceAmount ${allowanceAmount}`)
+
+        // Open respective Modal
+        skippedApprovalModal();
+        // Create event listener that calls executeTx function
+        if(counter < 2) closeBtn.addEventListener('click', executeTx)
+
+      // If User has not approved Kyber to trade tokens, call approval first
+      } else {
+
+        console.log(`Source Amount: ${srcAmountWei} is greater than AllowanceAmount ${allowanceAmount}`)
+
+        startModal();
+        // Create event listener that calls executeTx function
+        if(counter < 2) closeBtn.addEventListener('click', approveTx)
+
+      }
+
+    // If token balance is less then srcAmount, stopp the trade
     } else {
       insufficientFundsModal()
     }
-  // Else end
+
   }
 
 // trade() end

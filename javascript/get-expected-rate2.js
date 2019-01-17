@@ -1,8 +1,8 @@
 // Variables needed
 
-var kyberNetworkProxyContract = null;
+let kyberNetworkProxyContract = null;
 
-var kyberNetworkProxyAddress = "0x818e6fecd516ecc3849daf6845e3ec868087b755";
+let kyberNetworkProxyAddress = "0x818e6fecd516ecc3849daf6845e3ec868087b755";
 
 kyberNetworkProxyContract = new web3.eth.Contract(kyberNetworkProxyABI, kyberNetworkProxyAddress)
 

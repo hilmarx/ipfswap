@@ -20,7 +20,7 @@ function startModal() {
 
 function tradeApprovedModal() {
   // Alert modal to ask for confirmation of approved transaction
-  modalTitle.innerText = "Now confirm the approved Swap to exchange the tokens";
+  modalTitle.innerText = "Execute the Swap to exchange the tokens";
   closeBtn.innerText = "Confirm"
   modalBody.innerHTML = ``
   modalBody.style.display = "none"
@@ -75,6 +75,24 @@ function insufficientFundsModal() {
   modalTitle.innerText = "Insufficient funds"
   modalBody.style.display = "none"
   closeBtn.innerText = "Close"
+  $('.modal').modal('show');
+}
+
+function skippedApprovalModal() {
+  modalTitle.innerText = "Please execute the Swap 🤖";
+  closeBtn.innerText = "Confirm"
+  modalBody.innerHTML = `<div id="confirm-text">${srcAmountWei / srcQuantity} ${srcSymbol} for ${destAmount.toFixed(6)} ${destSymbol}\n</div> <div id="slippage-note">A max 3% slippage Rate may be applied in situations of larger market movements during trade execution.</div>` ;
+  modalBody.style.display = "";
+  $('.modal').modal('show');
+}
+
+
+function canceledTxModal() {
+  modalTitle.innerText = "Swap was canceled";
+  closeBtn.innerText = "New Swap"
+  closeBtn.addEventListener("click", reloadMainPage);
+  metaMaskBtn.style.display = "none";
+  modalBody.style.display = "none"
   $('.modal').modal('show');
 }
 
