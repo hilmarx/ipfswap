@@ -61,6 +61,16 @@ function successfulModal() {
   $('.modal').modal('show');
 }
 
+// Specific Modals
+
+function zeroModal() {
+  modalTitle.innerText = `Please input how many ${srcSymbol} you want to sell`
+  modalBody.style.display = "none";
+  metaMaskBtn.style.display = "none";
+
+  $('.modal').modal('show');
+}
+
 //  ##################### Modal changes END #######################
 
 

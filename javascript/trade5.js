@@ -139,6 +139,11 @@ let counter = 0
 
 async function trade() {
 
+  if (srcAmount == 0) {
+    zeroModal();
+    return 0
+  }
+
   // Set the right Gas price
   const defaultGasPrice = await web3.eth.getGasPrice()
   const chosenGasPrice = (defaultGasPrice < 10000000000) ? `${10000000000}` : `${defaultGasPrice}`;
@@ -281,7 +286,8 @@ async function trade() {
                 to: kyberNetworkProxyAddress,
                 data: transactionData2,
                 nonce: nonce + 1,
-                gas: 600000
+                gas: 600000,
+                gasPrice: chosenGasPrice
               }, function(error, hash) {
                 console.log(hash)
                   waitingModal(hash)
@@ -313,6 +319,7 @@ async function trade() {
       // If token balance is less then srcAmount
     } else {
       modalTitle.innerText = "Insufficient Token Balance"
+      modalBody.style.display = "none"
       closeBtn.innerText = "Close"
       $('.modal').modal('show');
     }
