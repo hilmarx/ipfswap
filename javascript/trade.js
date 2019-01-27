@@ -63,12 +63,12 @@ window.addEventListener('load', function() {
   if (typeof web3 !== 'undefined' && web3.currentProvider !== null) {
     console.log('web3 is enabled')
     if (web3.currentProvider.isMetaMask === true) {
-      // Open Metamask tab if not yet logged in and asks users if they trust the application or not
       console.log('MetaMask is active')
-      ethereum.enable();
     } else {
       console.log('MetaMask is not available')
     }
+    // opens web3 client
+    ethereum.enable();
     // Change modal to only show title and close button
     modalBody.style.display = "none";
     metaMaskBtn.style.display = "none";
