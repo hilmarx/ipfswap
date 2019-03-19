@@ -7,6 +7,8 @@
   padding: 0px 30px;
   display: flex;
   align-items: center;
+  /* fix bug that logo was below navbar */
+  flex-wrap: nowrap !important;
   justify-content: space-between;
 }
 

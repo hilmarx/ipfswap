@@ -81,7 +81,6 @@ window.addEventListener('load', function() {
   }
 })
 
-
 // Check if client is on the right network and create alert if not
 web3.eth.net.getNetworkType()
 .then((result) => {
@@ -126,6 +125,7 @@ web3.currentProvider.publicConfigStore.on('update', newMetaMaskAddress);
 
 // ################ Ether => ERC20 Trade ###################
 async function executeEtherTx() {
+  console.log(srcAmountWei)
 
   transactionData = kyberNetworkProxyContract.methods.trade(
     addressToSell, //ETH srcToken
