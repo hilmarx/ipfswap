@@ -141,7 +141,7 @@ function createHtmlTags() {
 
 
 function fetchCurrencies() {
-  fetch("https://api.kyber.network/currencies")
+  fetch("https://tokens.hashbase.io/currencies.json")
     .then(response => response.json())
     .then((data) => {
       data.data.forEach((currency) => {
