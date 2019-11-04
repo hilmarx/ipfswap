@@ -10,7 +10,7 @@ html, body {
 }
 
 .wrapper {
-  background: linear-gradient(#e66465, #9198e5);
+  background: linear-gradient( 135deg, #43CBFF 10%, #9708CC 100%);
 /*  background-image: url('../images/ocean.jpg'), linear-gradient(-225deg, rgba(0,101,168,0.6) 0%, rgba(0,36,61,0.6) 50%);
 *//*  background-color: #323c41;
   background-image: url('images/ocean.jpg');
