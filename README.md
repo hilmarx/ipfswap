@@ -26,3 +26,19 @@ Dat gateway address: [https://swap.hashbase.io/](https://swap.hashbase.io/)
 Dat address: dat://2b78cfdb34d9fcaced2aa8f2b4403366f7d4e63b3530d1362f3e8959dacfb2fb/
 
 Site domain: https://ipfswap.com (isn't frequently updated)
+
+# What is decentralized
+
+* Whole static site
+
+* BootstrapJS
+
+* Token list and their icons
+
+* other things usual from decentralized token swappers: contracts
+
+# To do
+
+* .eth domain
+
+* web3 script from IPFS
