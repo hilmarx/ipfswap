@@ -211,7 +211,7 @@ function setBuyValues() {
   let buyTokenImageUrl = mainnetAddresses[destSymbol];
 
   // Set token-logo for token to buy. If it is ETH, then use local image
-  (destSymbol == "ETH") ? buyLogo.src = "images/ethereum.png" : buyLogo.src = `https://tokens.hashbase.io/img/${buyTokenImageUrl}.svg`;
+  (destSymbol == "ETH") ? buyLogo.src = "images/ethereum.png" : buyLogo.src = `https://ipfs.io/ipfs/QmdC2Sp2827yTporcNxqcd6de2zsdp8WheVfxzty94mss6/img/${buyTokenImageUrl}.svg`;
 
   // Re-run getExpectedRate function for new address pair & wait for the promise to resolve. Then update the numbers in the dest field
   getExpectedRate()
@@ -232,7 +232,7 @@ function setSellValues() {
   let sellTokenImageUrl = mainnetAddresses[srcSymbol];
 
   // Set token-logo for token to sell. If it is ETH, then use local image
-  (srcSymbol == "ETH") ? sellLogo.src = "images/ethereum.png" : sellLogo.src = `https://tokens.hashbase.io/img/${sellTokenImageUrl}.svg`;
+  (srcSymbol == "ETH") ? sellLogo.src = "images/ethereum.png" : sellLogo.src = `https://ipfs.io/ipfs/QmdC2Sp2827yTporcNxqcd6de2zsdp8WheVfxzty94mss6/img/${sellTokenImageUrl}.svg`;
 
   // Calc srcQuantity with srcDecimal
   srcQuantity = `${10 ** srcDecimal}`;
