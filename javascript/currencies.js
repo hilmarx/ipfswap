@@ -141,7 +141,7 @@ function createHtmlTags() {
 
 
 function fetchCurrencies() {
-  fetch("https://tokens.hashbase.io/currencies.json")
+  fetch("https://ipfs.io/ipfs/QmdC2Sp2827yTporcNxqcd6de2zsdp8WheVfxzty94mss6/kyber/currencies.json")
     .then(response => response.json())
     .then((data) => {
       data.data.forEach((currency) => {
@@ -154,7 +154,7 @@ function fetchCurrencies() {
     })
     .then((result) => {
       if (selectedEthereumNetwork == "ropsten") {
-        fetch("https://ropsten-api.kyber.network/currencies")
+        fetch("https://ipfs.io/ipfs/QmdC2Sp2827yTporcNxqcd6de2zsdp8WheVfxzty94mss6/kyber/ropsten/currencies.json")
           .then(response => response.json())
           .then((data) => {
             data.data.forEach((currency) => {
