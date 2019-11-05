@@ -11,7 +11,7 @@ Fully trustless ERC20 Token Swaps using Ethereum &amp; Kyber Network, hosted on 
 
 ----
 
-IPFS address: [QmfBU7Jws15uwxUj5nS1F1CUncn37msLrEcFkuexmLge5E](https://gateway.pinata.cloud/ipfs/QmfBU7Jws15uwxUj5nS1F1CUncn37msLrEcFkuexmLge5E/)
+IPFS address: [QmXCQSRujXiK43KpuqDEYg3BSrj99Ruffqr7hmXpWjEtcr](https://ipfs.io/ipfs/QmXCQSRujXiK43KpuqDEYg3BSrj99Ruffqr7hmXpWjEtcr/)
 
 Site domain: https://ipfswap.com
 
