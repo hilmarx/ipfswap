@@ -23,4 +23,4 @@ Dat address: dat://2b78cfdb34d9fcaced2aa8f2b4403366f7d4e63b3530d1362f3e8959dacfb
 
 ----
 
-Site domain: https://ipfswap.com
+Site domain: https://ipfswap.com (isn't frequently updated)
