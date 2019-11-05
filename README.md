@@ -4,7 +4,7 @@ Fully trustless ERC20 Token Swaps using Ethereum &amp; Kyber Network, hosted on 
 
 <img src="images/screenshots/default.png"/>
 
-IPFS address: [QmXJSK7VaNoAmZr4Fp7Z5faqNSnxGpMs3ENfPhncnQ7ag2](https://gateway.pinata.cloud/ipfs/QmXJSK7VaNoAmZr4Fp7Z5faqNSnxGpMs3ENfPhncnQ7ag2/)
+IPFS address: [QmfBU7Jws15uwxUj5nS1F1CUncn37msLrEcFkuexmLge5E](https://gateway.pinata.cloud/ipfs/QmfBU7Jws15uwxUj5nS1F1CUncn37msLrEcFkuexmLge5E/)
 
 **It also works in Dat network**! Unfortunately, Beaker Browser doesn't haves Web3 integrated, but a fork could implement it using [Muon+MetaMask](https://github.com/SwapyNetwork/electron-metamask-boilerplate). IPFSWAP working from Dat:
 
