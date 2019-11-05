@@ -1,6 +1,6 @@
-# ipfswap
+# IPFSWAP
 
-Fully trustless ERC20 Token Swaps using Ethereum &amp; Kyber Network, hosted on IPFS and Dat.
+Fully trustless ERC20 Token Swaps using Ethereum &amp; Kyber Network, hosted on IPFS and [Dat](https://beakerbrowser.com/).
 
 ![](images/screenshots/new.jpg)
 
