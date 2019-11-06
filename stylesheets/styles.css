@@ -255,5 +255,13 @@ html, body {
   height: 1em;
 }
 
+@media(max-width:8in){
+.swap-card {
+    margin-right: 1em;
+    margin-left: 1em;
+    border-radius: 20px;
+}
+}
+
 
 
