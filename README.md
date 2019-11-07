@@ -2,6 +2,8 @@
 
 Fully trustless ERC20 Token Swaps using Ethereum &amp; Kyber Network, hosted on IPFS and [Dat](https://beakerbrowser.com/).
 
+![Twitter](https://img.shields.io/twitter/follow/ipfswap?style=social)
+
 ![](images/screenshots/new.jpg)
 
 *Up-to-date screenshot above*
